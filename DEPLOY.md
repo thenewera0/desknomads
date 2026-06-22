@@ -52,6 +52,42 @@ template.
 - [ ] AdSense: add the site in AdSense + get it approved (ads stay blank until then).
 - [ ] Run the **Publish** workflow once manually to confirm the engine end-to-end.
 
+## Blogger migration & redirects (SEO preservation)
+All legacy Blogger URLs are 301-redirected to the new pages by the middleware
+([`src/proxy.ts`](src/proxy.ts)), so rankings/backlinks transfer:
+
+| Old Blogger URL | Redirects to |
+| --- | --- |
+| `/2026/05/slug.html` (+ exact map of all imported posts) | `/slug` |
+| `/p/about.html` | `/about` (mapped pages) |
+| `/search/label/AI%20Tools` | `/category/ai-tools` |
+| `/2025/07/` , `/2025/` (date archives) | `/` |
+| `/feeds/...` | `/feed.xml` |
+| any `?m=1` (Blogger mobile) | clean URL |
+
+The exact post map is generated from the imported articles:
+`node --env-file=.env.local scripts/build-blogger-redirects.mjs` → `src/lib/blogger-redirects.ts`
+(re-run it whenever you re-import). These all run on **desknomads.shop**.
+
+### Redirecting `desknomads.blogspot.com` → `desknomads.shop`
+The `.blogspot.com` host is served by Google, so our app can't 301 it directly.
+After you move `desknomads.shop` off Blogger onto Vercel, add this to the Blogger
+theme (**Blogger → Theme → Edit HTML**, immediately after `<head>`):
+
+```html
+<script>/*<![CDATA[*/
+(function(){
+  if (location.hostname.indexOf("blogspot.com") > -1) {
+    location.replace("https://desknomads.shop" + location.pathname + location.search + location.hash);
+  }
+})();
+/*]]>*/</script>
+```
+
+This forwards every `blogspot.com` visit to the same path on `desknomads.shop`,
+where the middleware finishes the 301 to the correct new page. (Keep the Blogger
+blog published so the redirect script keeps serving.)
+
 ## Useful local scripts (`node --env-file=.env.local scripts/<file>`)
 - `test-engine.mjs` — verify OpenRouter + Tavily keys/models
 - `test-gsc.mjs` — verify Search Console access
