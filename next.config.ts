@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname, "."),
   },
+  // Keep server-only Node packages out of the bundle so they load correctly
+  // in Vercel serverless functions (fixes "Failed to load external module").
+  serverExternalPackages: ["firebase-admin", "google-auth-library"],
   images: {
     remotePatterns: [
       {
