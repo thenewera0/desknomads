@@ -11,7 +11,7 @@ const app = getApps()[0] || initializeApp({
   }),
 });
 const db = getFirestore(app);
-const PUB = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "pub-6797633093721504";
+const PUB = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "pub-1562600430581360";
 const FEED = "https://www.desknomads.shop/feeds/posts/default?alt=json&max-results=500";
 const AUTHOR_ID = "desknomads-team";
 

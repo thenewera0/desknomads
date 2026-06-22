@@ -65,7 +65,7 @@ export function slugifyCategory(name: string): string {
 export const SITE = {
   name: process.env.NEXT_PUBLIC_SITE_NAME || "DeskNomads",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com",
-  adsensePublisherId: process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "pub-6797633093721504",
+  adsensePublisherId: process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "pub-1562600430581360",
   defaultAuthorId: "desknomads-team",
 };
 

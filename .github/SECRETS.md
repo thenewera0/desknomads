@@ -20,7 +20,7 @@ Add each name below with the value from your local `.env.local`.
 | `TAVILY_API_KEY` | your Tavily key | discover, publish |
 | `NEXT_PUBLIC_SITE_URL` | `https://desknomads.shop` | all (canonical URLs) |
 | `NEXT_PUBLIC_SITE_NAME` | `DeskNomads` | publish |
-| `NEXT_PUBLIC_ADSENSE_PUBLISHER_ID` | `pub-6797633093721504` | publish (ad slots) |
+| `NEXT_PUBLIC_ADSENSE_PUBLISHER_ID` | `pub-1562600430581360` | publish (ad slots) |
 | `GSC_SITE_URL` | `sc-domain:desknomads.shop` | performance |
 
 ## Optional secrets (performance workflow)
