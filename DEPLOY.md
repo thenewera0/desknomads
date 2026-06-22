@@ -25,7 +25,7 @@ template.
 2. Framework preset: **Next.js** (auto-detected). Root directory: repo root.
 3. **Environment Variables** — add everything from `.env.local`:
    - `NEXT_PUBLIC_FIREBASE_*` (7), `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`
-   - `NEXT_PUBLIC_SITE_URL=https://desknomads.shop`, `NEXT_PUBLIC_SITE_NAME=DeskNomads`
+   - `NEXT_PUBLIC_SITE_URL=https://www.desknomads.shop`, `NEXT_PUBLIC_SITE_NAME=DeskNomads`
    - `NEXT_PUBLIC_ADSENSE_PUBLISHER_ID`, `NEXT_PUBLIC_ADSENSE_SLOT` (when you have it)
    - `OPENROUTER_API_KEY`, `TAVILY_API_KEY`, `CRON_SECRET`
    - `GSC_SITE_URL`, `GSC_CLIENT_EMAIL` (optional)
@@ -44,11 +44,11 @@ template.
 4. Auto-publish is already enabled (`settings/engine.autoPublishEnabled = true`).
 
 ## 4. Post-deploy checklist
-- [ ] Site loads at `https://desknomads.shop` with articles + tools.
+- [ ] Site loads at `https://www.desknomads.shop` with articles + tools.
 - [ ] Old Blogger URL redirects (e.g. `/2026/05/…html` → `/…`).
 - [ ] Admin login works at `/admin/login` (enable Email/Password in Firebase Auth).
-- [ ] `https://desknomads.shop/ads.txt` returns the publisher line.
-- [ ] Submit `https://desknomads.shop/sitemap.xml` in Google Search Console.
+- [ ] `https://www.desknomads.shop/ads.txt` returns the publisher line.
+- [ ] Submit `https://www.desknomads.shop/sitemap.xml` in Google Search Console.
 - [ ] AdSense: add the site in AdSense + get it approved (ads stay blank until then).
 - [ ] Run the **Publish** workflow once manually to confirm the engine end-to-end.
 
@@ -78,7 +78,7 @@ theme (**Blogger → Theme → Edit HTML**, immediately after `<head>`):
 <script>/*<![CDATA[*/
 (function(){
   if (location.hostname.indexOf("blogspot.com") > -1) {
-    location.replace("https://desknomads.shop" + location.pathname + location.search + location.hash);
+    location.replace("https://www.desknomads.shop" + location.pathname + location.search + location.hash);
   }
 })();
 /*]]>*/</script>
