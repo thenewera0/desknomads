@@ -15,6 +15,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@next/third-parties": "^16.2.9",
     "@phosphor-icons/react": "^2.1.10",
     "@tiptap/extension-code-block-lowlight": "^3.27.1",
     "@tiptap/extension-heading": "^3.27.1",

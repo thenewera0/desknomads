@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono, Newsreader } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
+
+const GA_ID = process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID; // G-NEK7FYPZT6
 
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -108,6 +111,7 @@ export default function RootLayout({
         <div className="grain-overlay" aria-hidden="true" />
         {children}
         <Analytics />
+        {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
       </body>
     </html>
   );
