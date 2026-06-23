@@ -145,7 +145,7 @@ function ToolCard({ tool, index, reduceMotion }: ToolCardProps) {
       }}
       className="flex"
     >
-      <Link href={`/tools/${tool.slug}`} className="group flex flex-col w-full h-full">
+      <a href={tool.url || "#"} target="_blank" rel="noopener noreferrer" className="group flex flex-col w-full h-full">
         <div
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsHovered(true)}
@@ -220,7 +220,7 @@ function ToolCard({ tool, index, reduceMotion }: ToolCardProps) {
             </div>
           </div>
         </div>
-      </Link>
+      </a>
     </motion.div>
   );
 }

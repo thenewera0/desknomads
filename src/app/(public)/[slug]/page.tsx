@@ -12,13 +12,13 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import ArticleContent from "@/components/articles/ArticleContent";
 import TableOfContents from "@/components/articles/TableOfContents";
-import RelatedArticles from "@/components/articles/RelatedArticles";
+import RelatedArticles, { type RelatedArticle } from "@/components/articles/RelatedArticles";
 import NewsletterInline from "@/components/articles/NewsletterInline";
 import CopyLinkButton from "@/components/articles/CopyLinkButton";
 import ReadingProgress from "@/components/articles/ReadingProgress";
 import ViewTracker from "@/components/articles/ViewTracker";
 import type { Article, FAQ, TOCItem } from "@/types";
-import { getPublishedArticleBySlug } from "@/lib/firebase/server-data";
+import { getPublishedArticleBySlug, getArticleCards } from "@/lib/firebase/server-data";
 
 // Revalidate article pages periodically so freshly published content appears.
 export const revalidate = 300;
@@ -284,6 +284,25 @@ export default async function ArticlePage({
     notFound();
   }
 
+  // Real related articles from the same category (exclude current); none → section hidden.
+  let related: RelatedArticle[] = [];
+  try {
+    const cards = await getArticleCards({ categorySlug: article.category?.slug, limit: 7 });
+    related = cards
+      .filter((a) => a.id !== article.id)
+      .slice(0, 3)
+      .map((a) => ({
+        id: a.id,
+        title: a.title,
+        slug: a.slug,
+        featuredImage: a.featuredImage,
+        readingTime: a.readingTime,
+        category: a.category ? { name: a.category.name, color: a.category.color } : undefined,
+      }));
+  } catch (err) {
+    console.error("Related articles fetch failed:", err);
+  }
+
   const articleSchema = generateArticleSchema(article);
   const faqSchema = generateFAQSchema(article.faqs);
   const breadcrumbSchema = generateBreadcrumbSchema(article);
@@ -531,7 +550,7 @@ export default async function ArticlePage({
           </div>
 
           {/* Related Articles */}
-          <RelatedArticles currentArticleId={article.id} categorySlug={article.category?.slug || ""} />
+          <RelatedArticles articles={related} />
         </div>
       </article>
     </>

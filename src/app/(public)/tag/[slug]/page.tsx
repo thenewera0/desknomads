@@ -2,30 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AnimatedCategoryHeader, AnimatedArticleGrid } from "@/components/shared/AnimatedGrid";
+import { getArticleCardsByTag } from "@/lib/firebase/server-data";
 
-// Demo articles
-const demoTagArticles = [
-  {
-    id: "1",
-    title: "ChatGPT vs Claude vs Gemini: The Ultimate AI Comparison for 2025",
-    slug: "chatgpt-vs-claude-vs-gemini-comparison",
-    excerpt: "We tested all three AI assistants across 50 real-world tasks.",
-    featuredImage: "https://picsum.photos/seed/ai-comparison/600/400",
-    readingTime: 8,
-    views: 12400,
-    publishedAt: "2025-06-15T10:00:00Z",
-  },
-  {
-    id: "2",
-    title: "10 AI Writing Tools That Will Transform Your Content Strategy",
-    slug: "ai-writing-tools-content-strategy",
-    excerpt: "From blog posts to social media, these AI writing tools save hours.",
-    featuredImage: "https://picsum.photos/seed/ai-writing/600/400",
-    readingTime: 7,
-    views: 6800,
-    publishedAt: "2025-06-13T10:00:00Z",
-  },
-];
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,
@@ -51,7 +30,17 @@ export default async function TagPage({
   if (!slug) notFound();
 
   const tagName = slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-  const articles = demoTagArticles;
+  const real = await getArticleCardsByTag(slug, 30).catch(() => []);
+  const articles = real.map((a) => ({
+    id: a.id,
+    title: a.title,
+    slug: a.slug,
+    excerpt: a.excerpt,
+    featuredImage: a.featuredImage,
+    readingTime: a.readingTime,
+    views: a.views,
+    publishedAt: a.publishedAt || a.createdAt,
+  }));
 
   return (
     <div className="min-h-[calc(100vh-var(--dn-nav-height))] pt-28 md:pt-36 pb-24">

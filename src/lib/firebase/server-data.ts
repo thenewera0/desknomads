@@ -144,6 +144,27 @@ export async function getApprovedTools(limit = 50): Promise<Tool[]> {
   return tools.slice(0, limit);
 }
 
+export async function getAuthorBySlugServer(slug: string): Promise<Author | null> {
+  const snap = await adminDb.collection("authors").where("slug", "==", slug).limit(1).get();
+  if (snap.empty) return null;
+  const d = snap.docs[0];
+  const data = d.data();
+  return { id: d.id, ...data, createdAt: tsToIso(data.createdAt) || "" } as Author;
+}
+
+export async function getArticleCardsByAuthor(authorId: string, limit = 24): Promise<Article[]> {
+  const all = await getArticleCards({ limit: 500 });
+  return all.filter((a) => a.authorId === authorId).slice(0, limit);
+}
+
+// Must match the tag-link transform used on the article page (lowercase, spaces→hyphens).
+const tagSlugify = (t: string) => t.toLowerCase().trim().replace(/\s+/g, "-");
+
+export async function getArticleCardsByTag(tagSlug: string, limit = 30): Promise<Article[]> {
+  const all = await getArticleCards({ limit: 500 });
+  return all.filter((a) => (a.tags || []).some((t) => tagSlugify(t) === tagSlug)).slice(0, limit);
+}
+
 export async function getPublishedSlugs(): Promise<{ slug: string; updatedAt: string }[]> {
   const snap = await adminDb.collection("articles").where("status", "==", "published").get();
   return snap.docs.map((d) => {
