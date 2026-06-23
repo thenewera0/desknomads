@@ -20,7 +20,17 @@ const QUALITY_RULES = `QUALITY RULES (strict):
 - Solve a real problem with concrete, actionable detail, real examples, comparisons, and recent references.
 - Use specific numbers, names, and steps. Cite research with inline <a> links to the provided source URLs where a claim depends on them.
 - CRITICAL — do NOT fabricate data. Never invent statistics, percentages, study results, dollar figures, dates, or quotes. Only state a specific figure if it appears in the RESEARCH block, and link it to its source. If you lack a figure, describe the trend qualitatively or omit it. Never attribute made-up numbers to real companies or studies.
-- Use a confident, helpful editorial voice.`;
+- Use a confident, helpful editorial voice.
+
+SCANNABILITY RULES (just as important — readers skim, so make it easy):
+- Keep paragraphs SHORT: 2-3 sentences max. Never write a paragraph longer than 4 sentences. Break walls of text apart.
+- <strong>Bold</strong> the key phrase or takeaway in most paragraphs so a skimmer gets the point at a glance.
+- Use bullet (<ul>) or numbered (<ol>) lists generously — at least one list in most sections. Prefer lists over long prose when enumerating items, steps, pros/cons, or features.
+- For list items that define something, lead with a bolded term: <li><strong>Term:</strong> explanation</li>.
+- Use a <blockquote> for the single most important takeaway in each major section (these render as highlighted callout boxes). Keep them to 1-2 sentences.
+- Use <h3> subheadings to break long <h2> sections into skimmable chunks.
+- Use <table> for any comparison (tools, plans, pros/cons, before/after).
+- Front-load value: the first sentence of each section should deliver the main point.`;
 
 function htmlInstructions(plan: ContentPlan): string {
   const outline = plan.outline
@@ -30,12 +40,13 @@ function htmlInstructions(plan: ContentPlan): string {
 Allowed tags: <h2 id="..."> <h3 id="..."> <p> <ul> <ol> <li> <strong> <em> <a href> <blockquote> <table> <thead> <tbody> <tr> <th> <td>.
 - Do NOT include an <h1> (the title is rendered separately).
 - Every <h2> and <h3> MUST have a unique, kebab-case id attribute (used for the table of contents and anchor links).
-- Open with a 2-3 paragraph introduction (no heading) that hooks the reader and states what they'll learn.
-- Follow this outline (expand each section substantially):
+- Open with a short 1-2 sentence hook paragraph, then a <blockquote> "TL;DR" callout (2-3 sentences summarizing what the reader will get), then 1 more intro paragraph. No heading on the intro.
+- Follow this outline (expand each section substantially, but in SHORT paragraphs + lists, never long prose blocks):
 ${outline}
-- Include at least one comparison <table>, one real-world case study/example, a "Pros and Cons" treatment (e.g. two <ul>s), concrete statistics, numbered actionable steps, and an expert-insights section.
-- End with a strong "Conclusion" <h2> and a "Related Resources" <h2> with a short <ul> of further-reading links.
-- Target 2500-4000 words. Do not pad to reach length; earn it with depth.`;
+- Every major section should contain at least one list OR table, and a <blockquote> callout for its key takeaway.
+- Include at least one comparison <table>, one real-world case study/example, a "Pros and Cons" treatment (two <ul>s), concrete actionable steps as a numbered <ol>, and an expert-insights section.
+- End with a strong "Conclusion" <h2> (with a final <blockquote> takeaway) and a "Related Resources" <h2> with a short <ul> of further-reading links.
+- Target 2500-4000 words. Do not pad to reach length; earn it with depth. Density of lists/bold/callouts matters as much as length.`;
 }
 
 export async function generateArticle(

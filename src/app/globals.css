@@ -154,39 +154,59 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Editorial Content Styles ──────────────────────────────── */
 .article-content {
-  font-size: 1.125rem;
-  line-height: 1.85;
-  color: var(--dn-text-secondary);
+  font-size: 1.1875rem;            /* ~19px — comfortable long-form reading */
+  line-height: 1.8;
+  color: rgba(226, 232, 240, 0.9); /* brighter body = less eye fatigue */
+  letter-spacing: 0.003em;
+}
+
+/* Lead paragraph — a larger, brighter opener pulls readers in */
+.article-content > p:first-of-type {
+  font-size: 1.325rem;
+  line-height: 1.6;
+  color: #fff;
+  margin-bottom: 1.85rem;
 }
 
 .article-content h2 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--dn-text);
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.55rem, 1.2rem + 1.1vw, 1.95rem);
+  font-weight: 800;
+  color: #fff;
+  margin-top: 3.25rem;
+  margin-bottom: 1.1rem;
+  padding-top: 1.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08); /* clear section breaks */
+  letter-spacing: -0.022em;
+  line-height: 1.22;
 }
 
 .article-content h3 {
-  font-size: 1.375rem;
-  font-weight: 600;
-  color: var(--dn-text);
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-  letter-spacing: -0.01em;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 2.25rem;
+  margin-bottom: 0.7rem;
+  letter-spacing: -0.012em;
 }
 
 .article-content p {
-  margin-bottom: 1.5rem;
-  max-width: 65ch;
+  margin-bottom: 1.45rem;
+  max-width: 68ch;
+}
+
+/* Bold key phrases pop so scanners catch the gist */
+.article-content strong,
+.article-content b {
+  color: #fff;
+  font-weight: 700;
 }
 
 .article-content a {
   color: var(--dn-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(96, 165, 250, 0.3);
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(96, 165, 250, 0.4);
   transition: text-decoration-color var(--dn-duration-fast) var(--dn-ease);
 }
 
@@ -195,29 +215,42 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .article-content img {
-  border-radius: 12px;
-  margin: 2rem 0;
+  border-radius: 14px;
+  margin: 2.25rem 0;
   width: 100%;
   height: auto;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* Blockquote → highlighted callout box for key insights */
 .article-content blockquote {
-  border-left: 3px solid var(--dn-primary);
-  padding-left: 1.25rem;
   margin: 2rem 0;
-  color: var(--dn-text);
-  font-style: italic;
+  padding: 1.15rem 1.5rem;
+  border-left: 3px solid var(--dn-accent);
+  border-radius: 0 0.85rem 0.85rem 0;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.09), rgba(59, 130, 246, 0.02));
+  color: #fff;
+  font-size: 1.15rem;
+  font-style: normal;
 }
+.article-content blockquote p { max-width: none; margin-bottom: 0.5rem; }
+.article-content blockquote p:last-child { margin-bottom: 0; }
 
 .article-content ul,
 .article-content ol {
+  margin: 1.2rem 0 1.75rem;
   padding-left: 1.5rem;
-  margin-bottom: 1.5rem;
+  max-width: 68ch;
 }
 
 .article-content li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
+  padding-left: 0.35rem;
 }
+.article-content ul > li::marker { color: var(--dn-accent); }
+.article-content ol > li::marker { color: var(--dn-accent); font-weight: 700; }
+/* "Term: explanation" list items — the term reads as an accent label */
+.article-content li > strong:first-child { color: var(--dn-accent); }
 
 .article-content code {
   background: rgba(59, 130, 246, 0.1);
@@ -475,12 +508,13 @@ h1, h2, h3, h4, h5, h6 {
   .grain-overlay { display: none; }
 
   /* Comfortable article typography on small screens */
-  .article-content { font-size: 0.975rem; }
-  .article-content h2 { font-size: 1.4rem; margin-top: 2rem; }
-  .article-content h3 { font-size: 1.175rem; margin-top: 1.5rem; }
+  .article-content { font-size: 1.0625rem; line-height: 1.75; }
+  .article-content > p:first-of-type { font-size: 1.15rem; }
+  .article-content h2 { font-size: 1.45rem; margin-top: 2.25rem; padding-top: 1.35rem; }
+  .article-content h3 { font-size: 1.2rem; margin-top: 1.75rem; }
   .article-content p,
   .article-content ul,
-  .article-content ol { margin-bottom: 1.15rem; }
+  .article-content ol { margin-bottom: 1.2rem; }
 
   /* Wide tables scroll horizontally instead of breaking the layout */
   .article-content table {
