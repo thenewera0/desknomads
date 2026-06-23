@@ -18,6 +18,12 @@ import { bloggerRedirects } from "@/lib/blogger-redirects";
  * desknomads.blogspot.com host itself is a Blogger-level setting — see DEPLOY.md.
  */
 
+// Merged/duplicate articles → canonical article (301). Keeps SEO equity on one URL.
+const mergeRedirects: Record<string, string> = {
+  "/claude-code-vs-codex-cloud-ide-future": "/claude-code-vs-codex-cloud-ai-coding-frav",
+  "/agentic-ide-superset-claude-code-vs-code": "/claude-code-vs-codex-cloud-ai-coding-frav",
+};
+
 // Blogger label → our category slug (handles name mismatches)
 const labelAliases: Record<string, string> = {
   "side hustle": "side-hustles",
@@ -55,6 +61,10 @@ export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
   const to = (target: string, code: 301 | 308 = 301) =>
     NextResponse.redirect(new URL(target, request.url), code);
+
+  // 0. Merged duplicate articles → canonical (301)
+  const merged = mergeRedirects[pathname];
+  if (merged) return to(merged);
 
   // 1. Exact Blogger post map (most reliable; generated from imported articles)
   const exact = bloggerRedirects[pathname];
