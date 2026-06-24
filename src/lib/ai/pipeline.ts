@@ -71,7 +71,9 @@ export async function runDiscovery(): Promise<{ discovered: number; eligible: nu
     return { discovered: 0, eligible: 0 };
   }
 
-  const candidates = await synthesizeOpportunities(signals);
+  // Pass already-published titles so the engine avoids near-duplicate topics.
+  const existingTitles = (await getLinkableArticles().catch(() => [])).map((a) => a.title);
+  const candidates = await synthesizeOpportunities(signals, 12, existingTitles);
   await log("discovery.synthesize", "info", `Synthesized ${candidates.length} candidate topics`, {
     model: MODELS.text,
   });

@@ -188,23 +188,45 @@ export interface CandidateOpportunity {
  */
 export async function synthesizeOpportunities(
   signals: RawSignal[],
-  count = 12
+  count = 12,
+  existingTitles: string[] = []
 ): Promise<CandidateOpportunity[]> {
   const signalDigest = signals
     .slice(0, 80)
     .map((s, i) => `${i + 1}. [${s.source}] ${s.title}${s.engagement ? ` (eng:${s.engagement})` : ""}`)
     .join("\n");
 
-  const system = `You are the editor-in-chief of DeskNomads, an authority site about AI tools, remote work, and online income. You turn trending signals into high-value, SEO-focused article opportunities. You only propose ideas that genuinely fit these categories: ${CATEGORIES.join(", ")}.`;
+  const existingBlock = existingTitles.length
+    ? `\n\nWe have ALREADY published these articles — do NOT propose anything that overlaps or is a near-duplicate of them (different angle/topic only):\n${existingTitles
+        .slice(0, 80)
+        .map((t) => `- ${t}`)
+        .join("\n")}`
+    : "";
+
+  const system = `You are the editor-in-chief of DeskNomads, an authority site about AI tools, remote work, and online income. Your SEO strategy is to win LONG-TAIL, LOW-COMPETITION searches — specific, practical, "how-to" and "best free X" content that ranks fast because big sites ignore the niche. You turn trending signals into these specific article opportunities. You only propose ideas that genuinely fit these categories: ${CATEGORIES.join(", ")}.`;
 
   const user = `Here are trending signals gathered today from Hacker News, Reddit, Google Trends, and news sources:
 
-${signalDigest}
+${signalDigest}${existingBlock}
 
-Propose the ${count} strongest article opportunities for DeskNomads. Favor topics with clear search demand, freshness, and monetization potential. Avoid duplicates and avoid generic evergreen ideas with no current hook.
+Propose the ${count} strongest article opportunities for DeskNomads. STRATEGY — be specific and beat low-competition long-tail queries instead of fighting big publishers on broad head terms.
+
+STRONGLY PREFER these formats/angles (this is the core of the strategy):
+- Step-by-step how-to guides: "How to Run an LLM Locally — Step-by-Step Guide (2026)", "How to Use Claude for <specific task>".
+- "Top N free ..." listicles tied to a specific use-case: "Top 5 Free AI Image Generators in 2026", "7 Free AI Tools to Make a Short Film".
+- "Best free <tool category> for <specific audience/use-case> in 2026".
+- Lesser-known / insider angles: "Secret ChatGPT Tricks Freelancers Use", "5 Underrated AI Tools for <niche>".
+- Specific tool tutorials, comparisons of niche tools, and "<tool> for <specific job>" guides.
+
+RULES:
+- Favor SPECIFIC keywords (a tool name + a use-case + "free"/"2026"/"step by step") over broad competitive terms like "best AI tools" or "make money online".
+- Each idea should target a clear long-tail keyword most large sites are NOT optimizing for.
+- Tie ideas to the trending signals where possible (freshness), but specificity + low competition matter most.
+- Most ideas should be searchIntent "informational" (how-to / guide / list). Include the year (2026) where natural.
+- Avoid duplicates and anything too generic to rank.
 
 Return ONLY JSON of the shape:
-{"opportunities":[{"title":"compelling working title","topic":"1-sentence description","category":"one of the allowed categories","primaryKeyword":"main search keyword","secondaryKeywords":["...","..."],"searchIntent":"informational|commercial|transactional|navigational","angle":"the unique angle that makes this stand out","sourceUrls":["url1","url2"]}]}`;
+{"opportunities":[{"title":"specific, compelling working title (often How to.../Top N Free...)","topic":"1-sentence description","category":"one of the allowed categories","primaryKeyword":"the specific long-tail search keyword","secondaryKeywords":["related long-tail variants"],"searchIntent":"informational|commercial|transactional|navigational","angle":"the specific niche/use-case that makes this low-competition","sourceUrls":["url1","url2"]}]}`;
 
   const parsed = await chatJSON<{ opportunities: CandidateOpportunity[] }>([
     { role: "system", content: system },
