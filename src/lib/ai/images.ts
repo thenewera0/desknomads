@@ -1,11 +1,14 @@
 /**
- * Featured Image Generation — creates a 16:9 editorial hero image via the
- * OpenRouter image model and stores it in Firebase Storage (media library).
+ * Featured Image Generation — creates a 16:9 editorial hero image and stores it
+ * in Firebase Storage (media library).
+ *
+ * Default provider is Pollinations.ai (free, no API key, Flux model). Set
+ * IMAGE_PROVIDER=openrouter to use the paid OpenRouter image model instead.
  */
 import { adminStorage, adminDb } from "@/lib/firebase/admin";
 import { FieldValue } from "firebase-admin/firestore";
-import { generateImage } from "./openrouter";
-import { SITE } from "./config";
+import { generateImage, type GeneratedImage } from "./openrouter";
+import { SITE, EngineError } from "./config";
 
 export interface FeaturedImageResult {
   url: string;
@@ -14,10 +17,37 @@ export interface FeaturedImageResult {
   height: number;
 }
 
+const IMAGE_PROVIDER = (process.env.IMAGE_PROVIDER || "pollinations").toLowerCase();
+
 function buildImagePrompt(title: string, category: string): string {
   return `Create a premium 16:9 editorial blog hero image for an article titled "${title}" in the ${category} category.
 Style: modern SaaS aesthetic, technology-focused, cinematic lighting, high contrast, realistic, clean composition, depth of field, optimized as an eye-catching Google Discover thumbnail.
 Strict requirements: NO text, NO words, NO letters, NO logos, NO watermarks anywhere in the image. Wide 16:9 aspect ratio. Photorealistic / high-end 3D render quality.`;
+}
+
+/** Free image generation via Pollinations.ai (Flux). No API key required. */
+async function pollinationsImage(prompt: string): Promise<GeneratedImage> {
+  let lastErr: unknown;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const seed = Math.floor(Math.random() * 1_000_000);
+    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(
+      prompt
+    )}?width=1280&height=720&nologo=true&model=flux&seed=${seed}`;
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 90_000); // generation can take a while
+      const res = await fetch(url, { signal: ctrl.signal });
+      clearTimeout(t);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const buffer = Buffer.from(await res.arrayBuffer());
+      if (buffer.length < 1000) throw new Error("empty image"); // guard against error placeholders
+      return { buffer, mimeType: res.headers.get("content-type") || "image/jpeg" };
+    } catch (err) {
+      lastErr = err;
+      await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+    }
+  }
+  throw new EngineError("image.pollinations", `Pollinations failed: ${String(lastErr)}`);
 }
 
 const ext: Record<string, string> = {
@@ -36,9 +66,13 @@ export async function generateFeaturedImage(
   category: string,
   altText: string
 ): Promise<FeaturedImageResult> {
-  const img = await generateImage(buildImagePrompt(title, category));
+  const prompt = buildImagePrompt(title, category);
+  const img =
+    IMAGE_PROVIDER === "openrouter"
+      ? await generateImage(prompt)
+      : await pollinationsImage(prompt);
 
-  const fileExt = ext[img.mimeType] || "png";
+  const fileExt = ext[img.mimeType] || "jpg";
   const path = `articles/${slug}/featured-${Date.now()}.${fileExt}`;
   const bucket = adminStorage.bucket();
   const file = bucket.file(path);
