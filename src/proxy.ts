@@ -62,6 +62,18 @@ export async function proxy(request: NextRequest) {
   const to = (target: string, code: 301 | 308 = 301) =>
     NextResponse.redirect(new URL(target, request.url), code);
 
+  // -1. Canonical host: send the bare apex → www for PAGES only. Static files
+  // (ads.txt, robots.txt, sitemap.xml, feed.xml) are excluded by the matcher, so
+  // they serve directly on the apex — letting AdSense fetch desknomads.shop/ads.txt
+  // with a 200 instead of a redirect.
+  const host = request.headers.get("host") || request.nextUrl.host;
+  if (host === "desknomads.shop") {
+    return NextResponse.redirect(
+      new URL(pathname + request.nextUrl.search, "https://www.desknomads.shop"),
+      301
+    );
+  }
+
   // 0. Merged duplicate articles → canonical (301)
   const merged = mergeRedirects[pathname];
   if (merged) return to(merged);
