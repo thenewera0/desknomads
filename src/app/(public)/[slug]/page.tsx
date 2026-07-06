@@ -339,7 +339,7 @@ export default async function ArticlePage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      <article className="py-12 md:py-16">
+      <article className="pt-16 md:pt-24 pb-12 md:pb-16">
         <div className="dn-container">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-xs text-[var(--dn-text-muted)] mb-8">

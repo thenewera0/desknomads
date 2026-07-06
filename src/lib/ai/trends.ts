@@ -211,14 +211,18 @@ ${signalDigest}${existingBlock}
 
 Propose the ${count} strongest article opportunities for DeskNomads. STRATEGY — be specific and beat low-competition long-tail queries instead of fighting big publishers on broad head terms.
 
-STRONGLY PREFER these formats/angles (this is the core of the strategy):
-- Step-by-step how-to guides: "How to Run an LLM Locally — Step-by-Step Guide (2026)", "How to Use Claude for <specific task>".
-- "Top N free ..." listicles tied to a specific use-case: "Top 5 Free AI Image Generators in 2026", "7 Free AI Tools to Make a Short Film".
-- "Best free <tool category> for <specific audience/use-case> in 2026".
-- Lesser-known / insider angles: "Secret ChatGPT Tricks Freelancers Use", "5 Underrated AI Tools for <niche>".
-- Specific tool tutorials, comparisons of niche tools, and "<tool> for <specific job>" guides.
+Use a MIX of these high-click-through title formats (vary them across the batch — do NOT make them all the same shape):
+- Listicle: "Top 10 AI Tools for <specific job>", "7 Free <X> for <audience> (2026)".
+- How-to / step-by-step: "How to <do X> — Step-by-Step (2026)", "How to Use <tool> for <specific task>".
+- Best-of: "Best Free <tool category> for <specific audience> in 2026".
+- Question / decision: "What to Do When <specific problem>", "When Should You <action>?", "Is <tool> Worth It for <use-case>?".
+- Curiosity / insider: "5 <things> Nobody Tells You About <topic>", "Secret <tool> Tricks <audience> Use", "5 <X> Mistakes That Cost You <outcome>".
+- Comparisons of NICHE tools, and "<tool> for <specific job>" guides.
+
+Aim for a balanced spread across the ${count} ideas — e.g. a few "Top N…", a few "How to…", a couple "Best…", one or two "What to do when…/When to…", and one or two curiosity/insider angles.
 
 RULES:
+- Titles must be SPECIFIC and curiosity-driven so they earn the click, but honest (no clickbait that the article can't deliver).
 - Favor SPECIFIC keywords (a tool name + a use-case + "free"/"2026"/"step by step") over broad competitive terms like "best AI tools" or "make money online".
 - Each idea should target a clear long-tail keyword most large sites are NOT optimizing for.
 - Tie ideas to the trending signals where possible (freshness), but specificity + low competition matter most.
@@ -226,7 +230,7 @@ RULES:
 - Avoid duplicates and anything too generic to rank.
 
 Return ONLY JSON of the shape:
-{"opportunities":[{"title":"specific, compelling working title (often How to.../Top N Free...)","topic":"1-sentence description","category":"one of the allowed categories","primaryKeyword":"the specific long-tail search keyword","secondaryKeywords":["related long-tail variants"],"searchIntent":"informational|commercial|transactional|navigational","angle":"the specific niche/use-case that makes this low-competition","sourceUrls":["url1","url2"]}]}`;
+{"opportunities":[{"title":"specific, high-CTR title — vary the format (Top N.../How to.../Best.../What to do when.../curiosity)","topic":"1-sentence description","category":"one of the allowed categories","primaryKeyword":"the specific long-tail search keyword","secondaryKeywords":["related long-tail variants"],"searchIntent":"informational|commercial|transactional|navigational","angle":"the specific niche/use-case that makes this low-competition","sourceUrls":["url1","url2"]}]}`;
 
   const parsed = await chatJSON<{ opportunities: CandidateOpportunity[] }>([
     { role: "system", content: system },
