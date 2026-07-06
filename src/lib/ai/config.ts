@@ -14,12 +14,13 @@ export const MODELS = {
 } as const;
 
 // ─── Topic scoring weights (must sum to 1.0) ────────────────────
-// Tuned for a long-tail, low-competition strategy: reward easy-to-rank niche
-// topics over high-volume head terms big publishers already dominate.
+// Balanced long-tail strategy: topics must have REAL search demand AND be
+// reasonably low-competition — the sweet spot, not zero-competition obscurity
+// nobody actually searches for.
 export const SCORE_WEIGHTS = {
-  searchDemand: 0.22,
-  trendVelocity: 0.18,
-  lowCompetition: 0.3,
+  searchDemand: 0.28,
+  trendVelocity: 0.17,
+  lowCompetition: 0.25,
   viralPotential: 0.1,
   relevance: 0.2,
 } as const;

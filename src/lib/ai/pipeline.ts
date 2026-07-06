@@ -30,6 +30,7 @@ import { generateFeaturedImage } from "./images";
 import { factCheck } from "./factcheck";
 import {
   saveOpportunities,
+  getOpportunities,
   getEligibleOpportunities,
   getOpportunityById,
   updateOpportunity,
@@ -71,8 +72,18 @@ export async function runDiscovery(): Promise<{ discovered: number; eligible: nu
     return { discovered: 0, eligible: 0 };
   }
 
-  // Pass already-published titles so the engine avoids near-duplicate topics.
-  const existingTitles = (await getLinkableArticles().catch(() => [])).map((a) => a.title);
+  // Avoid near-duplicate topics against BOTH published articles and topics
+  // already sitting in the queue (discovered/queued but not yet generated).
+  const [publishedTitles, pending] = await Promise.all([
+    getLinkableArticles().catch(() => []),
+    getOpportunities().catch(() => []),
+  ]);
+  const existingTitles = [
+    ...publishedTitles.map((a) => a.title),
+    ...pending
+      .filter((o) => o.status === "discovered" || o.status === "queued")
+      .map((o) => o.title),
+  ];
   const candidates = await synthesizeOpportunities(signals, 12, existingTitles);
   await log("discovery.synthesize", "info", `Synthesized ${candidates.length} candidate topics`, {
     model: MODELS.text,

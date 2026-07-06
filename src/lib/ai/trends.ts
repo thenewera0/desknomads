@@ -182,6 +182,59 @@ export interface CandidateOpportunity {
   sourceUrls: string[];
 }
 
+// Words that carry no topical signal — stripped before comparing titles so we
+// match on the DISTINCTIVE terms (tool names, tasks) not the format scaffolding.
+const DEDUP_STOPWORDS = new Set([
+  "the", "a", "an", "and", "or", "for", "with", "your", "you", "how", "to", "of",
+  "in", "on", "is", "are", "when", "what", "why", "best", "top", "free", "guide",
+  "tutorial", "step", "steps", "tips", "ways", "using", "use", "vs", "2025", "2026",
+  "ai", "tool", "tools", "app", "apps", "software", "online", "new", "should",
+  "do", "does", "can", "that", "this", "from", "into", "get", "make",
+]);
+
+function topicTokens(s: string): Set<string> {
+  return new Set(
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length > 2 && !DEDUP_STOPWORDS.has(w))
+  );
+}
+
+/** Overlap coefficient of distinctive tokens: 1.0 = same core topic. */
+function topicOverlap(a: string, b: string): number {
+  const A = topicTokens(a);
+  const B = topicTokens(b);
+  if (!A.size || !B.size) return 0;
+  let inter = 0;
+  for (const t of A) if (B.has(t)) inter++;
+  return inter / Math.min(A.size, B.size);
+}
+
+/**
+ * Drop candidates that substantially overlap an already-published article OR an
+ * earlier candidate in the same batch. Compares the distinctive tokens of the
+ * title + primary keyword, so two "Superset IDE" or "automate your job" ideas
+ * collapse to one even when the surrounding wording differs.
+ */
+function dedupeCandidates(
+  candidates: CandidateOpportunity[],
+  existingTitles: string[],
+  threshold = 0.6
+): CandidateOpportunity[] {
+  const kept: string[] = [...existingTitles];
+  const out: CandidateOpportunity[] = [];
+  for (const c of candidates) {
+    const fingerprint = `${c.title} ${c.primaryKeyword || ""}`;
+    const dup = kept.some((prev) => topicOverlap(fingerprint, prev) >= threshold);
+    if (dup) continue;
+    out.push(c);
+    kept.push(fingerprint);
+  }
+  return out;
+}
+
 /**
  * Ask the LLM to convert raw signals into concrete, SEO-shaped article ideas
  * that fit DeskNomads' categories.
@@ -222,12 +275,13 @@ Use a MIX of these high-click-through title formats (vary them across the batch 
 Aim for a balanced spread across the ${count} ideas — e.g. a few "Top N…", a few "How to…", a couple "Best…", one or two "What to do when…/When to…", and one or two curiosity/insider angles.
 
 RULES:
-- Titles must be SPECIFIC and curiosity-driven so they earn the click, but honest (no clickbait that the article can't deliver).
-- Favor SPECIFIC keywords (a tool name + a use-case + "free"/"2026"/"step by step") over broad competitive terms like "best AI tools" or "make money online".
-- Each idea should target a clear long-tail keyword most large sites are NOT optimizing for.
-- Tie ideas to the trending signals where possible (freshness), but specificity + low competition matter most.
+- REAL SEARCH DEMAND IS REQUIRED. Every topic must be something a meaningful number of people actually search for. AVOID brand-new, no-name, or obscure tools almost nobody has heard of yet (they have ~zero search volume even if competition is low). Prefer well-known tools (ChatGPT, Claude, Gemini, Midjourney, Notion, Excel, Canva, etc.) and common tasks/problems (resume, invoices, data entry, video editing, job search, budgeting, automation) paired with a specific angle.
+- The sweet spot = a topic with proven demand + a specific enough angle/use-case to rank without fighting huge publishers. NOT zero-competition obscurity nobody searches.
+- Titles must be SPECIFIC and curiosity-driven so they earn the click, but honest (no clickbait the article can't deliver).
+- Favor specific long-tail keywords (well-known tool + a use-case + "free"/"2026"/"step by step") over ultra-broad terms like "best AI tools" or "make money online".
+- Tie ideas to the trending signals where possible (freshness).
 - Most ideas should be searchIntent "informational" (how-to / guide / list). Include the year (2026) where natural.
-- Avoid duplicates and anything too generic to rank.
+- Each of the ${count} ideas must be about a DISTINCT topic — no two ideas covering the same tool/task/angle, and nothing overlapping the already-published list above.
 
 Return ONLY JSON of the shape:
 {"opportunities":[{"title":"specific, high-CTR title — vary the format (Top N.../How to.../Best.../What to do when.../curiosity)","topic":"1-sentence description","category":"one of the allowed categories","primaryKeyword":"the specific long-tail search keyword","secondaryKeywords":["related long-tail variants"],"searchIntent":"informational|commercial|transactional|navigational","angle":"the specific niche/use-case that makes this low-competition","sourceUrls":["url1","url2"]}]}`;
@@ -238,7 +292,7 @@ Return ONLY JSON of the shape:
   ]);
 
   const urlByTitle = new Map(signals.map((s) => [s.title, s.url]));
-  return (parsed.opportunities || []).map((o) => ({
+  const normalized = (parsed.opportunities || []).map((o) => ({
     ...o,
     category: CATEGORIES.includes(o.category as never) ? o.category : CATEGORIES[0],
     secondaryKeywords: o.secondaryKeywords || [],
@@ -246,4 +300,8 @@ Return ONLY JSON of the shape:
       Boolean
     ),
   }));
+
+  // Final safety net: strip near-duplicates the prompt let slip through
+  // (against published articles and within this batch).
+  return dedupeCandidates(normalized, existingTitles);
 }
