@@ -162,10 +162,10 @@ export default function Footer() {
           <div className="flex items-center gap-1 text-xs text-[var(--dn-text-muted)]">
             <EnvelopeSimple size={14} weight="light" />
             <a
-              href="mailto:hello@desknomads.shop"
+              href="mailto:vikasthakur6566@gmail.com"
               className="hover:text-white transition-all duration-200 ease-[var(--dn-ease-out)] active:scale-[0.97] inline-block"
             >
-              hello@desknomads.shop
+              vikasthakur6566@gmail.com
             </a>
           </div>
         </div>
