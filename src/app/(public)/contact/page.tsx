@@ -190,7 +190,7 @@ export default function ContactPage() {
               <h3 className="text-sm font-semibold text-white mb-5">Direct Contact</h3>
               <div className="space-y-4">
                 <a
-                  href="mailto:hello@desknomads.com"
+                  href="mailto:hello@desknomads.shop"
                   className="group flex items-center gap-3 text-[13px] text-[var(--dn-text-secondary)]
                            hover:text-[var(--dn-accent)] transition-colors duration-300"
                 >
@@ -198,7 +198,7 @@ export default function ContactPage() {
                                group-hover:scale-110 transition-transform duration-300">
                     <EnvelopeSimple size={15} className="text-[var(--dn-accent)]" />
                   </div>
-                  hello@desknomads.com
+                  hello@desknomads.shop
                 </a>
                 <a
                   href="https://twitter.com/desknomads"

@@ -12,6 +12,28 @@ function tsToIso(v: unknown): string | null {
   return null;
 }
 
+/**
+ * Articles below this word count are treated as "thin": excluded from the
+ * sitemap and on-site listings and marked <meta robots noindex>. This keeps
+ * low-value stubs (old short migrated posts, articles that generated short)
+ * from dragging down the site's overall quality signal for search + AdSense.
+ * The pages stay live (direct URLs / redirects still resolve) — they're just
+ * not surfaced or indexed. Reversible: raise a stub past the threshold and it
+ * automatically re-enters listings and the sitemap.
+ */
+export const MIN_INDEXABLE_WORDS = 1000;
+
+/** Effective word count from the stored field, falling back to the HTML body. */
+export function articleWordCount(d: { wordCount?: number; content?: string }): number {
+  if (d.wordCount && d.wordCount > 0) return d.wordCount;
+  return d.content ? d.content.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length : 0;
+}
+
+/** True when an article is substantial enough to index + surface. */
+export function isIndexable(a: { wordCount?: number; content?: string }): boolean {
+  return articleWordCount(a) >= MIN_INDEXABLE_WORDS;
+}
+
 function docToArticle(id: string, d: DocumentData): Article {
   return {
     id,
@@ -27,7 +49,7 @@ function docToArticle(id: string, d: DocumentData): Article {
     publishedAt: tsToIso(d.publishedAt),
     scheduledAt: tsToIso(d.scheduledAt),
     readingTime: d.readingTime || 0,
-    wordCount: d.wordCount || 0,
+    wordCount: articleWordCount(d),
     seoTitle: d.seoTitle || "",
     seoDescription: d.seoDescription || "",
     canonicalUrl: d.canonicalUrl || "",
@@ -70,6 +92,7 @@ export async function getPublishedArticles(limitCount = 1000): Promise<Article[]
   const snap = await adminDb.collection("articles").where("status", "==", "published").get();
   return snap.docs
     .map((d) => docToArticle(d.id, d.data()))
+    .filter(isIndexable) // hide thin stubs from all on-site listings/feeds
     .sort((a, b) => (b.publishedAt || b.createdAt).localeCompare(a.publishedAt || a.createdAt))
     .slice(0, limitCount);
 }
@@ -167,8 +190,10 @@ export async function getArticleCardsByTag(tagSlug: string, limit = 30): Promise
 
 export async function getPublishedSlugs(): Promise<{ slug: string; updatedAt: string }[]> {
   const snap = await adminDb.collection("articles").where("status", "==", "published").get();
-  return snap.docs.map((d) => {
-    const data = d.data();
-    return { slug: data.slug || "", updatedAt: tsToIso(data.updatedAt) || new Date().toISOString() };
-  });
+  return snap.docs
+    .filter((d) => isIndexable(d.data())) // keep thin stubs out of the sitemap
+    .map((d) => {
+      const data = d.data();
+      return { slug: data.slug || "", updatedAt: tsToIso(data.updatedAt) || new Date().toISOString() };
+    });
 }

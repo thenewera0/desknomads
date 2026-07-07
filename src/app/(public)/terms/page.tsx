@@ -64,7 +64,7 @@ export default function TermsPage() {
 
           <h2>5. Contact Information</h2>
           <p>
-            If you have any questions or feedback regarding these terms, please contact our support team at <a href="mailto:hello@desknomads.com">hello@desknomads.com</a>.
+            If you have any questions or feedback regarding these terms, please contact our support team at <a href="mailto:hello@desknomads.shop">hello@desknomads.shop</a>.
           </p>
         </div>
       </div>

@@ -24,8 +24,8 @@ const fadeUp = (delay: number) => ({
 const values = [
   {
     icon: Lightbulb,
-    title: "Real Testing",
-    description: "Every tool and strategy is tested by our team before we recommend it.",
+    title: "Practical & Researched",
+    description: "Every guide is researched and written to be genuinely useful — clear steps you can act on today.",
     gradient: "from-amber-500/10 to-orange-500/10",
     iconColor: "#F59E0B",
   },
@@ -53,10 +53,10 @@ const values = [
 ];
 
 const stats = [
-  { value: "127+", label: "Articles Published", color: "var(--dn-primary)" },
-  { value: "89K+", label: "Monthly Readers", color: "var(--dn-success)" },
-  { value: "215+", label: "AI Tools Reviewed", color: "var(--dn-accent)" },
-  { value: "3.8K+", label: "Newsletter Subscribers", color: "var(--dn-warning)" },
+  { value: "60+", label: "In-Depth Guides", color: "var(--dn-primary)" },
+  { value: "Daily", label: "Fresh Content", color: "var(--dn-success)" },
+  { value: "Free", label: "Always Free to Read", color: "var(--dn-accent)" },
+  { value: "AI + Remote", label: "Our Focus", color: "var(--dn-warning)" },
 ];
 
 const topics = [
@@ -168,8 +168,8 @@ export default function AboutPage() {
             it&apos;s hard to know what actually works.
           </p>
           <p className="text-[15px] text-[var(--dn-text-secondary)] leading-[1.85]">
-            DeskNomads cuts through the hype. We test tools, review platforms, and share real strategies
-            that help you earn more, work less, and build a location-independent lifestyle.
+            DeskNomads cuts through the hype. We research tools, break down platforms, and share practical
+            strategies that help you earn more, work less, and build a location-independent lifestyle.
             Every article is written with one question in mind: <strong className="text-white">
             &quot;Is this actually useful?&quot;</strong>
           </p>
@@ -242,7 +242,7 @@ export default function AboutPage() {
         >
           <h2 className="text-xl font-bold text-white mb-3">Stay in the Loop</h2>
           <p className="text-sm text-[var(--dn-text-muted)] mb-6 max-w-sm mx-auto">
-            Join 3,800+ professionals getting weekly AI tool picks, income ideas, and remote work tips.
+            Get our latest AI tool picks, income ideas, and remote work tips — straight to your inbox.
           </p>
           <Link
             href="/newsletter"

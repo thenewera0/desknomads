@@ -70,7 +70,7 @@ export default function PrivacyPage() {
 
           <h2>5. Your Rights</h2>
           <p>
-            You can request access to or deletion of your email address from our subscriber records at any time. Simply click the &ldquo;Unsubscribe&rdquo; link found in the footer of any newsletter email, or send an email to <a href="mailto:hello@desknomads.com">hello@desknomads.com</a>.
+            You can request access to or deletion of your email address from our subscriber records at any time. Simply click the &ldquo;Unsubscribe&rdquo; link found in the footer of any newsletter email, or send an email to <a href="mailto:hello@desknomads.shop">hello@desknomads.shop</a>.
           </p>
         </div>
       </div>

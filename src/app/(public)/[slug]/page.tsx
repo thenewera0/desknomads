@@ -18,7 +18,7 @@ import CopyLinkButton from "@/components/articles/CopyLinkButton";
 import ReadingProgress from "@/components/articles/ReadingProgress";
 import ViewTracker from "@/components/articles/ViewTracker";
 import type { Article, FAQ, TOCItem } from "@/types";
-import { getPublishedArticleBySlug, getArticleCards } from "@/lib/firebase/server-data";
+import { getPublishedArticleBySlug, getArticleCards, isIndexable } from "@/lib/firebase/server-data";
 
 // Revalidate article pages periodically so freshly published content appears.
 export const revalidate = 300;
@@ -159,9 +159,14 @@ export async function generateMetadata({
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com";
 
+  // Thin stubs stay live (redirect targets still resolve) but are not indexed,
+  // so they don't count against the site's overall quality signal.
+  const thin = !isIndexable(article);
+
   return {
     title: article.seoTitle || article.title,
     description: article.seoDescription || article.excerpt,
+    ...(thin ? { robots: { index: false, follow: true } } : {}),
     alternates: {
       canonical: article.canonicalUrl || `${siteUrl}/${article.slug}`,
     },
