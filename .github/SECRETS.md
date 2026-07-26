@@ -16,7 +16,8 @@ Add each name below with the value from your local `.env.local`.
 | `FIREBASE_CLIENT_EMAIL` | `firebase-adminsdk-…@desknomads.iam.gserviceaccount.com` | all |
 | `FIREBASE_PRIVATE_KEY` | the full key **including the `\n` sequences** (copy the value between the quotes, without the quotes) | all |
 | `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | `desknomads.firebasestorage.app` | publish (image upload) |
-| `OPENROUTER_API_KEY` | your OpenRouter key | discover, publish |
+| `LEVIATHAN_API_KEY` | your Leviathan key (`lvh-live-…`) — primary LLM provider | discover, publish |
+| `OPENROUTER_API_KEY` | your OpenRouter key — automatic fallback | discover, publish |
 | `TAVILY_API_KEY` | your Tavily key | discover, publish |
 | `NEXT_PUBLIC_SITE_URL` | `https://www.desknomads.shop` | all (canonical URLs) |
 | `NEXT_PUBLIC_SITE_NAME` | `DeskNomads` | publish |
