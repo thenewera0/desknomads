@@ -72,11 +72,32 @@ export const SITE = {
   defaultAuthorId: "desknomads-team",
 };
 
+// ─── LLM providers ──────────────────────────────────────────────
+// Primary text generation goes through the Leviathan gateway (own keys, its
+// own 6-provider failover chain). OpenRouter is the automatic fallback if
+// Leviathan errors, returns an empty body, or produces unparseable JSON — so
+// content quality is preserved no matter what. Same prompts either way.
+export const LEVIATHAN = {
+  baseUrl: process.env.LEVIATHAN_BASE_URL || "https://leviathan-core.onrender.com/v1",
+  model: process.env.LEVIATHAN_MODEL || "leviathan-auto",
+  /** Primary toggle. On by default; set LEVIATHAN_ENABLED=false to skip it. */
+  enabled: (process.env.LEVIATHAN_ENABLED ?? "true").toLowerCase() !== "false",
+};
+
+export function getLeviathanKey(): string | undefined {
+  return process.env.LEVIATHAN_API_KEY || undefined;
+}
+
 // ─── Env accessors ──────────────────────────────────────────────
 export function getOpenRouterKey(): string {
   const key = process.env.OPENROUTER_API_KEY;
   if (!key) throw new EngineConfigError("OPENROUTER_API_KEY is not set");
   return key;
+}
+
+/** Non-throwing variant used when building the provider failover list. */
+export function getOpenRouterKeyOptional(): string | undefined {
+  return process.env.OPENROUTER_API_KEY || undefined;
 }
 
 export function getTavilyKey(): string {
