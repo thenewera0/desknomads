@@ -110,6 +110,15 @@ export default function Navbar() {
             >
               Tool Directory
             </Link>
+            <Link
+              href="/open-source"
+              className="px-3.5 py-2 text-[13px] font-medium text-amber-400
+                       hover:text-amber-300 transition-all duration-200 ease-[var(--dn-ease-out)] rounded-lg
+                       hover:bg-white/[0.04] active:scale-[0.97] flex items-center gap-1.5"
+            >
+              <Cube size={14} weight="fill" />
+              Open Source
+            </Link>
           </nav>
 
           {/* Desktop Actions */}

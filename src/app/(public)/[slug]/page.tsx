@@ -9,13 +9,15 @@ import {
   ShareNetwork,
   EnvelopeSimple,
 } from "@phosphor-icons/react/dist/ssr";
+import dynamic from "next/dynamic";
 import ArticleContent from "@/components/articles/ArticleContent";
-import TableOfContents from "@/components/articles/TableOfContents";
 import RelatedArticles, { type RelatedArticle } from "@/components/articles/RelatedArticles";
-import NewsletterInline from "@/components/articles/NewsletterInline";
 import CopyLinkButton from "@/components/articles/CopyLinkButton";
-import ReadingProgress from "@/components/articles/ReadingProgress";
-import ViewTracker from "@/components/articles/ViewTracker";
+
+const ReadingProgress = dynamic(() => import("@/components/articles/ReadingProgress"));
+const ViewTracker = dynamic(() => import("@/components/articles/ViewTracker"));
+const TableOfContents = dynamic(() => import("@/components/articles/TableOfContents"));
+const NewsletterInline = dynamic(() => import("@/components/articles/NewsletterInline"));
 import type { Article, FAQ, TOCItem } from "@/types";
 import { getPublishedArticleBySlug, getArticleCards, isIndexable } from "@/lib/firebase/server-data";
 
@@ -276,6 +278,46 @@ function generateBreadcrumbSchema(article: Article) {
   };
 }
 
+function generateSoftwareSchema(article: Article) {
+  if (article.category?.slug !== "ai-tools") return null;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com";
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: article.title,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    description: article.seoDescription || article.excerpt,
+    url: `${siteUrl}/${article.slug}`,
+    image: article.featuredImage,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD"
+    }
+  };
+}
+
+function generateHowToSchema(article: Article) {
+  const isHowTo = article.title.toLowerCase().startsWith("how to") || article.tags.some(t => t.toLowerCase() === "how-to");
+  if (!isHowTo) return null;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com";
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: article.title,
+    description: article.seoDescription || article.excerpt,
+    image: article.featuredImage,
+    step: article.toc.map((item, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: item.text,
+      text: item.text,
+      url: `${siteUrl}/${article.slug}#${item.id}`
+    }))
+  };
+}
+
 export default async function ArticlePage({
   params,
 }: {
@@ -310,6 +352,8 @@ export default async function ArticlePage({
   const articleSchema = generateArticleSchema(article);
   const faqSchema = generateFAQSchema(article.faqs);
   const breadcrumbSchema = generateBreadcrumbSchema(article);
+  const softwareSchema = generateSoftwareSchema(article);
+  const howToSchema = generateHowToSchema(article);
 
   const publishedDate = article.publishedAt
     ? new Date(article.publishedAt).toLocaleDateString("en-US", {
@@ -342,6 +386,18 @@ export default async function ArticlePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
+      {softwareSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+        />
+      )}
+      {howToSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+        />
+      )}
 
       <article className="pt-32 md:pt-40 pb-12 md:pb-16">
         <div className="dn-container">
