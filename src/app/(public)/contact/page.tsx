@@ -4,9 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
+  Globe,
   EnvelopeSimple,
-  TwitterLogo,
-  LinkedinLogo,
   PaperPlaneTilt,
   CheckCircle,
   SpinnerGap,
@@ -35,7 +34,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-var(--dn-nav-height))] py-12 md:py-16">
+    <div className="min-h-[calc(100vh-var(--dn-nav-height))] pt-32 md:pt-40 pb-12 md:pb-16">
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none" aria-hidden="true">
         <div

@@ -81,7 +81,7 @@ export default async function AuthorPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
 
-      <div className="py-12 md:py-16">
+      <div className="pt-32 md:pt-40 pb-12 md:pb-16">
         <div className="dn-container">
           <nav className="flex items-center gap-2 text-xs text-[var(--dn-text-muted)] mb-8">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
