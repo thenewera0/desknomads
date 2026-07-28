@@ -30,7 +30,7 @@ export const ENGINE_DEFAULTS = {
   autoPublishEnabled: false, // safety: off until an admin enables it
   articlesPerDay: 2,
   minTopicScore: 75,
-  minFactCheckConfidence: 85,
+  minFactCheckConfidence: 70,
   minWordCount: 2500,
   publishHourIST: 9,
   discoverHourIST: 6,
