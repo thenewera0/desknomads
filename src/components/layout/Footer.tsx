@@ -1,11 +1,9 @@
 import Link from "next/link";
 import {
   Cube,
-  TwitterLogo,
-  LinkedinLogo,
-  YoutubeLogo,
-  PinterestLogo,
   EnvelopeSimple,
+  ArrowRight,
+  Globe,
 } from "@phosphor-icons/react/dist/ssr";
 
 const footerLinks = {
@@ -16,6 +14,10 @@ const footerLinks = {
     { label: "Automation", href: "/category/automation" },
     { label: "Productivity", href: "/category/productivity" },
     { label: "Side Hustles", href: "/category/side-hustles" },
+  ],
+  network: [
+    { label: "Saathi AI", href: "https://saathiai.co.in" },
+    { label: "Niva Setu", href: "https://nivasetu.in" },
   ],
   resources: [
     { label: "Tool Directory", href: "/tools" },
@@ -33,13 +35,6 @@ const footerLinks = {
   ],
 };
 
-const socialLinks = [
-  { icon: TwitterLogo, href: "https://twitter.com/desknomads", label: "Twitter" },
-  { icon: LinkedinLogo, href: "https://linkedin.com/company/desknomads", label: "LinkedIn" },
-  { icon: YoutubeLogo, href: "https://youtube.com/@desknomads", label: "YouTube" },
-  { icon: PinterestLogo, href: "https://pinterest.com/desknomads", label: "Pinterest" },
-];
-
 export default function Footer() {
   return (
     <footer 
@@ -55,7 +50,7 @@ export default function Footer() {
       <div className="dn-container py-16 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
           {/* Brand Column */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 flex flex-col items-start">
             <Link href="/" className="flex items-center gap-2.5 mb-5">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--dn-primary)] to-[var(--dn-accent)] flex items-center justify-center">
                 <Cube size={18} weight="light" className="text-white" />
@@ -64,35 +59,33 @@ export default function Footer() {
                 Desk<span className="text-[var(--dn-accent)]">Nomads</span>
               </span>
             </Link>
-            <p className="text-[var(--dn-text-secondary)] text-sm leading-relaxed max-w-[32ch] mb-6">
+            <p className="text-[var(--dn-text-secondary)] text-sm leading-relaxed max-w-[32ch] mb-8">
               Smart Tools. Remote Freedom. Future Income. Your guide to AI tools,
               remote work, and building income online.
             </p>
 
-            {/* Social Links */}
-            <div className="flex items-center gap-2">
-              {socialLinks.map((social) => {
-                const Icon = social.icon;
-                return (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-9 h-9 rounded-full flex items-center justify-center
-                             text-[var(--dn-text-muted)] hover:text-white
-                             hover:bg-white/[0.06] transition-all duration-200 ease-[var(--dn-ease-out)] active:scale-[0.97]"
-                    aria-label={social.label}
-                  >
-                    <Icon size={18} weight="light" />
-                  </a>
-                );
-              })}
-            </div>
+            {/* Contact Button */}
+            <a
+              href="mailto:vikasthakur6566@gmail.com"
+              className="group inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.05] hover:border-[var(--dn-accent)]/30 transition-all duration-300 ease-[var(--dn-ease-out)]"
+            >
+              <div className="w-8 h-8 rounded-full bg-[var(--dn-accent)]/10 flex items-center justify-center text-[var(--dn-accent)] group-hover:scale-110 transition-transform duration-300">
+                <EnvelopeSimple size={16} weight="fill" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--dn-text-muted)] group-hover:text-[var(--dn-text-secondary)] transition-colors">
+                  Contact Us
+                </span>
+                <span className="text-sm font-medium text-white">
+                  Click to Mail
+                </span>
+              </div>
+              <ArrowRight size={14} className="text-[var(--dn-text-muted)] group-hover:text-white group-hover:translate-x-1 transition-all duration-300 ml-2" />
+            </a>
           </div>
 
           {/* Explore */}
-          <div className="lg:col-span-2 lg:col-start-6">
+          <div className="lg:col-span-2 lg:col-start-5">
             <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-[var(--dn-text-muted)] mb-4">
               Explore
             </h3>
@@ -106,6 +99,29 @@ export default function Footer() {
                   >
                     {link.label}
                   </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          {/* Our Network */}
+          <div className="lg:col-span-2">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-[var(--dn-text-muted)] mb-4">
+              Our Network
+            </h3>
+            <ul className="flex flex-col gap-2.5">
+              {footerLinks.network.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-[var(--dn-text-secondary)] hover:text-[var(--dn-accent)] group flex items-center gap-1.5
+                             transition-all duration-200 ease-[var(--dn-ease-out)] active:scale-[0.97] inline-block"
+                  >
+                    {link.label}
+                    <Globe size={12} weight="light" className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                  </a>
                 </li>
               ))}
             </ul>

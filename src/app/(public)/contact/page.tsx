@@ -200,37 +200,44 @@ export default function ContactPage() {
                   </div>
                   vikasthakur6566@gmail.com
                 </a>
-                <a
-                  href="https://twitter.com/desknomads"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-3 text-[13px] text-[var(--dn-text-secondary)]
-                           hover:text-[#1DA1F2] transition-colors duration-300"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-[#1DA1F2]/10 flex items-center justify-center
-                               group-hover:scale-110 transition-transform duration-300">
-                    <TwitterLogo size={15} className="text-[#1DA1F2]" />
-                  </div>
-                  @desknomads
-                </a>
-                <a
-                  href="https://linkedin.com/company/desknomads"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-3 text-[13px] text-[var(--dn-text-secondary)]
-                           hover:text-[#0A66C2] transition-colors duration-300"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-[#0A66C2]/10 flex items-center justify-center
-                               group-hover:scale-110 transition-transform duration-300">
-                    <LinkedinLogo size={15} className="text-[#0A66C2]" />
-                  </div>
-                  DeskNomads
-                </a>
               </div>
             </motion.div>
 
             <motion.div
               {...fadeUp(0.2)}
+              className="rounded-2xl border border-white/[0.06] bg-[var(--dn-bg-card)] p-6
+                       hover:border-white/[0.1] transition-all duration-500"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <Globe size={15} className="text-[var(--dn-accent)]" />
+                <h3 className="text-sm font-semibold text-white">Our Other Projects</h3>
+              </div>
+              <div className="space-y-4">
+                <a
+                  href="https://saathiai.co.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex flex-col gap-1 text-[13px] text-[var(--dn-text-secondary)]
+                           hover:text-white transition-colors duration-300"
+                >
+                  <span className="font-semibold text-[var(--dn-accent)] group-hover:text-[var(--dn-primary)] transition-colors">Saathi AI</span>
+                  Your AI companion for smart work.
+                </a>
+                <a
+                  href="https://nivasetu.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex flex-col gap-1 text-[13px] text-[var(--dn-text-secondary)]
+                           hover:text-white transition-colors duration-300"
+                >
+                  <span className="font-semibold text-[var(--dn-accent)] group-hover:text-[var(--dn-primary)] transition-colors">Niva Setu</span>
+                  Connecting you to better opportunities.
+                </a>
+              </div>
+            </motion.div>
+
+            <motion.div
+              {...fadeUp(0.25)}
               className="rounded-2xl border border-white/[0.06] bg-[var(--dn-bg-card)] p-6
                        hover:border-white/[0.1] transition-all duration-500"
             >
@@ -240,7 +247,7 @@ export default function ContactPage() {
               </div>
               <p className="text-[12px] text-[var(--dn-text-muted)] leading-relaxed">
                 We typically respond within 24-48 hours during business days.
-                For urgent matters, reach out via Twitter DM.
+                For urgent matters, please use the contact form.
               </p>
             </motion.div>
           </div>

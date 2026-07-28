@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, Eye, TwitterLogo, LinkedinLogo, Globe } from "@phosphor-icons/react/dist/ssr";
+import { Clock, Eye, Globe, EnvelopeSimple } from "@phosphor-icons/react/dist/ssr";
 import { getAuthorBySlugServer, getArticleCardsByAuthor } from "@/lib/firebase/server-data";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.shop";
@@ -103,16 +103,9 @@ export default async function AuthorPage({
               <p className="text-xs text-[var(--dn-accent)] font-medium mb-3">{author.role}</p>
               <p className="text-sm text-[var(--dn-text-secondary)] leading-relaxed max-w-[55ch] mb-4">{author.bio}</p>
               <div className="flex items-center gap-2">
-                {author.social.twitter && (
-                  <a href={author.social.twitter} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/[0.04] text-[var(--dn-text-muted)] hover:bg-[#1DA1F2]/10 hover:text-[#1DA1F2] transition-all duration-300">
-                    <TwitterLogo size={16} />
-                  </a>
-                )}
-                {author.social.linkedin && (
-                  <a href={author.social.linkedin} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/[0.04] text-[var(--dn-text-muted)] hover:bg-[#0A66C2]/10 hover:text-[#0A66C2] transition-all duration-300">
-                    <LinkedinLogo size={16} />
-                  </a>
-                )}
+                <a href="mailto:vikasthakur6566@gmail.com" className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/[0.04] text-[var(--dn-text-muted)] hover:bg-[var(--dn-accent)]/10 hover:text-[var(--dn-accent)] transition-all duration-300">
+                  <EnvelopeSimple size={16} />
+                </a>
                 {author.social.website && (
                   <a href={author.social.website} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/[0.04] text-[var(--dn-text-muted)] hover:bg-white/[0.08] hover:text-white transition-all duration-300">
                     <Globe size={16} />

@@ -7,8 +7,7 @@ import {
   Eye,
   CalendarBlank,
   ShareNetwork,
-  TwitterLogo,
-  LinkedinLogo,
+  EnvelopeSimple,
 } from "@phosphor-icons/react/dist/ssr";
 import ArticleContent from "@/components/articles/ArticleContent";
 import TableOfContents from "@/components/articles/TableOfContents";
@@ -344,7 +343,7 @@ export default async function ArticlePage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      <article className="pt-16 md:pt-24 pb-12 md:pb-16">
+      <article className="pt-32 md:pt-40 pb-12 md:pb-16">
         <div className="dn-container">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-xs text-[var(--dn-text-muted)] mb-8">
@@ -510,30 +509,15 @@ export default async function ArticlePage({
                 </p>
                 <div className="flex items-center gap-2">
                   <a
-                    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(articleUrl)}&text=${encodeURIComponent(article.title)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={`mailto:?subject=${encodeURIComponent(article.title)}&body=${encodeURIComponent("Check out this article: " + articleUrl)}`}
                     className="w-9 h-9 rounded-full flex items-center justify-center
                              bg-white/[0.04] text-[var(--dn-text-muted)]
-                             hover:bg-[#1DA1F2]/10 hover:text-[#1DA1F2]
+                             hover:bg-[var(--dn-accent)]/10 hover:text-[var(--dn-accent)]
                              border border-white/[0.04]
                              transition-all duration-300"
-                    aria-label="Share on Twitter"
+                    aria-label="Share via Email"
                   >
-                    <TwitterLogo size={16} weight="light" />
-                  </a>
-                  <a
-                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-9 h-9 rounded-full flex items-center justify-center
-                             bg-white/[0.04] text-[var(--dn-text-muted)]
-                             hover:bg-[#0A66C2]/10 hover:text-[#0A66C2]
-                             border border-white/[0.04]
-                             transition-all duration-300"
-                    aria-label="Share on LinkedIn"
-                  >
-                    <LinkedinLogo size={16} weight="light" />
+                    <EnvelopeSimple size={16} weight="light" />
                   </a>
                   <CopyLinkButton url={articleUrl} />
                 </div>
