@@ -28,7 +28,7 @@ const categories = [
     slug: "remote-jobs",
     description: "Work from anywhere opportunities",
     icon: Briefcase,
-    color: "#22C55E",
+    color: "#10B981",
     articleCount: 62,
   },
   {
@@ -101,69 +101,73 @@ function CategoryCard({ cat, index, reduceMotion }: CategoryCardProps) {
 
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 32, filter: "blur(8px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, amount: 0.2 }}
-      whileHover={reduceMotion ? {} : { y: -3 }}
-      whileTap={reduceMotion ? {} : { scale: 0.98 }}
       transition={{
-        duration: 0.5,
-        delay: index * 0.04,
+        duration: 0.9,
+        delay: index * 0.05,
         ease: [0.16, 1, 0.3, 1],
       }}
+      className="h-full"
     >
-      <Link href={`/category/${cat.slug}`} className="group block">
+      <Link href={`/category/${cat.slug}`} className="group block h-full">
         <div
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className="relative p-5 md:p-6 rounded-xl border border-white/[0.05]
-                   bg-[#0E1624] hover:bg-white/[0.02] hover:border-white/[0.1]
-                   transition-all duration-300 ease-[var(--dn-ease-out)]
-                   overflow-hidden"
+          className="glass-card h-full flex flex-col group-hover:bg-white/[0.04] transition-colors duration-[var(--dn-duration)] p-1.5"
         >
-          {/* Glow effect on hover */}
-          {!reduceMotion && isHovered && (
+          <div className="glass-core relative p-6 h-full flex flex-col items-start justify-between">
+            {/* Glow effect on hover */}
+            {!reduceMotion && isHovered && (
+              <div
+                className="absolute inset-0 pointer-events-none transition-opacity duration-[var(--dn-duration-fast)]"
+                style={{
+                  background: `radial-gradient(120px circle at ${coords.x}px ${coords.y}px, ${cat.color}20, transparent 80%)`,
+                }}
+              />
+            )}
+
+            {/* Static subtle background glow fallback */}
             <div
-              className="absolute inset-0 pointer-events-none transition-opacity duration-200"
+              className="absolute inset-0 opacity-20 group-hover:opacity-40
+                       transition-opacity duration-[var(--dn-duration)] pointer-events-none"
               style={{
-                background: `radial-gradient(120px circle at ${coords.x}px ${coords.y}px, ${cat.color}10, transparent 80%)`,
+                background: `radial-gradient(circle at 10% 10%, ${cat.color}15, transparent 60%)`,
               }}
             />
-          )}
 
-          {/* Static subtle background glow fallback */}
-          <div
-            className="absolute inset-0 opacity-30 group-hover:opacity-80
-                     transition-opacity duration-200 pointer-events-none"
-            style={{
-              background: `radial-gradient(circle at 50% 0%, ${cat.color}05, transparent 70%)`,
-            }}
-          />
+            <div className="relative z-10 w-full">
+              {/* Header: Icon & Count */}
+              <div className="flex items-center justify-between w-full mb-6">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center
+                           transition-transform duration-[var(--dn-duration-fast)] ease-[var(--dn-ease-spring)]
+                           group-hover:scale-110 shadow-lg"
+                  style={{
+                    background: `linear-gradient(135deg, ${cat.color}20, ${cat.color}05)`,
+                    border: `1px solid ${cat.color}30`,
+                    boxShadow: `0 4px 12px ${cat.color}20, inset 0 1px 0 rgba(255,255,255,0.2)`,
+                  }}
+                >
+                  <Icon size={20} weight="duotone" style={{ color: cat.color }} />
+                </div>
+                
+                <span className="text-[10px] font-mono text-[var(--dn-text-muted)] group-hover:text-white/60 transition-colors">
+                  {cat.articleCount}
+                </span>
+              </div>
 
-          <div className="relative z-10">
-            {/* Icon */}
-            <div
-              className="w-9 h-9 rounded-lg flex items-center justify-center mb-4
-                       transition-transform duration-200 ease-[var(--dn-ease-out)]
-                       group-hover:scale-105"
-              style={{
-                background: `${cat.color}10`,
-                border: `1px solid ${cat.color}15`,
-              }}
-            >
-              <Icon size={18} weight="light" style={{ color: cat.color }} />
+              {/* Name */}
+              <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[var(--dn-accent)] transition-colors duration-[var(--dn-duration-fast)]">
+                {cat.name}
+              </h3>
+              
+              <p className="text-[11px] text-[var(--dn-text-secondary)] leading-relaxed line-clamp-2 pr-4">
+                {cat.description}
+              </p>
             </div>
-
-            {/* Name */}
-            <h3 className="text-sm font-semibold text-white mb-1 group-hover:text-[var(--dn-accent)] transition-colors duration-300">
-              {cat.name}
-            </h3>
-
-            {/* Count */}
-            <p className="text-[10px] font-mono text-[var(--dn-text-muted)]">
-              {cat.articleCount} articles
-            </p>
           </div>
         </div>
       </Link>
@@ -174,35 +178,37 @@ function CategoryCard({ cat, index, reduceMotion }: CategoryCardProps) {
 export default function Categories() {
   const reduceMotion = useReducedMotion();
 
+  const fadeUp = (delay: number) =>
+    reduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 32, filter: "blur(8px)" } as const,
+          whileInView: { opacity: 1, y: 0, filter: "blur(0px)" } as const,
+          viewport: { once: true, amount: 0.1 },
+          transition: { duration: 0.9, delay, ease: [0.16, 1, 0.3, 1] },
+        };
+
   return (
-    <section 
-      className="py-24 md:py-32"
-      style={{
-        backgroundColor: "#040B17", // Alternates with Trending
-        position: "relative",
-        zIndex: 10,
-      }}
-    >
+    <section className="relative w-full z-20" style={{ backgroundColor: "var(--dn-bg)" }}>
       <div className="dn-container">
         {/* Section header */}
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center animate-fade-in-up"
-          style={{ marginBottom: "56px" }}
-        >
-          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white mb-3">
-            Browse by <span className="font-serif italic font-normal text-[var(--dn-accent)]">Topic</span>
+        <motion.div {...fadeUp(0)} className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 mb-4 justify-center">
+             <span className="w-1.5 h-1.5 rounded-full bg-[var(--dn-accent)] shadow-[0_0_8px_var(--dn-accent)]" />
+             <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--dn-text-muted)]">
+               Explore
+             </span>
+          </div>
+          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4 drop-shadow-lg">
+            Browse by <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[var(--dn-accent)] to-[var(--dn-primary)]">Topic</span>
           </h2>
-          <p className="text-xs text-[var(--dn-text-secondary)] uppercase tracking-wider max-w-[45ch] mx-auto">
-            Deep-dive into the categories that matter most
+          <p className="text-sm md:text-base text-[var(--dn-text-secondary)] max-w-[45ch] mx-auto">
+            Deep-dive into the core subjects shaping the future of digital independence.
           </p>
         </motion.div>
 
         {/* Category Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((cat, i) => (
             <CategoryCard
               key={cat.slug}

@@ -47,16 +47,25 @@ export async function scoreOpportunities(
 ): Promise<ScoredOpportunity[]> {
   if (candidates.length === 0) return [];
 
-  const list = candidates
-    .map(
-      (c, i) =>
-        `${i}. Title: ${c.title}\n   Keyword: ${c.primaryKeyword}\n   Category: ${c.category}\n   Angle: ${c.angle}`
-    )
-    .join("\n");
-
+  const batchSize = 3;
+  const numBatches = Math.ceil(candidates.length / batchSize);
   const system = `You are a senior SEO + content strategy analyst for DeskNomads (AI tools, remote work, online income). You estimate the commercial and search opportunity of article ideas. Be discriminating but fair: a genuinely strong, timely, monetizable topic SHOULD score in the 80-90 range so it can be prioritized — do not artificially suppress good ideas. Reserve 90+ for exceptional opportunities and push weak/generic ideas below 60.`;
 
-  const user = `Score each idea on five factors from 0-100. Calibration anchors apply to every factor: 90-100 = exceptional, 80-89 = strong, 65-79 = decent, 50-64 = mediocre, <50 = weak.
+  const allScores = new Map<number, ScoreBreakdown>();
+
+  for (let b = 0; b < numBatches; b++) {
+    const start = b * batchSize;
+    const end = Math.min(candidates.length, start + batchSize);
+    const batch = candidates.slice(start, end);
+
+    const list = batch
+      .map(
+        (c, i) =>
+          `${start + i}. Title: ${c.title}\n   Keyword: ${c.primaryKeyword}\n   Category: ${c.category}\n   Angle: ${c.angle}`
+      )
+      .join("\n");
+
+    const user = `Score each idea on five factors from 0-100. Calibration anchors apply to every factor: 90-100 = exceptional, 80-89 = strong, 65-79 = decent, 50-64 = mediocre, <50 = weak.
 
 Factors:
 - searchDemand: monthly search volume potential for the keyword (high-intent commercial keywords with real volume = 80+).
@@ -68,19 +77,28 @@ Factors:
 Ideas:
 ${list}
 
-Return ONLY JSON: {"scores":[{"index":0,"searchDemand":0,"trendVelocity":0,"lowCompetition":0,"viralPotential":0,"relevance":0}, ...]} with one entry per idea.`;
+Return ONLY JSON: {"scores":[{"index":index_number,"searchDemand":0,"trendVelocity":0,"lowCompetition":0,"viralPotential":0,"relevance":0}, ...]} with one entry per idea.`;
 
-  const parsed = await chatJSON<{
-    scores: (ScoreBreakdown & { index: number })[];
-  }>([
-    { role: "system", content: system },
-    { role: "user", content: user },
-  ]);
+    try {
+      const parsed = await chatJSON<{
+        scores: (ScoreBreakdown & { index: number })[];
+      }>([
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ]);
 
-  const byIndex = new Map(parsed.scores?.map((s) => [s.index, s]) || []);
+      if (parsed.scores) {
+        for (const s of parsed.scores) {
+          allScores.set(s.index, s);
+        }
+      }
+    } catch (err) {
+      console.warn(`[engine:discovery] Batch ${b} failed to score opportunities`, err);
+    }
+  }
 
   return candidates.map((c, i) => {
-    const raw = byIndex.get(i);
+    const raw = allScores.get(i);
     const scores: ScoreBreakdown = {
       searchDemand: clamp(raw?.searchDemand),
       trendVelocity: clamp(raw?.trendVelocity),

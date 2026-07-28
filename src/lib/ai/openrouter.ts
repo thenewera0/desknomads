@@ -166,7 +166,7 @@ function buildProviders(opts: ChatOptions): ProviderReq[] {
       // Leviathan routes across many free providers with varying json-mode
       // support; rely on the prompt + loose parsing instead of response_format
       // so a strict-field rejection doesn't force a fallback on every call.
-      useResponseFormat: false,
+      useResponseFormat: true,
       retries: 1,
     });
   }
@@ -217,7 +217,7 @@ async function withFailover<R>(
 
 /** Run a chat completion and return the assistant text. */
 export async function chat(messages: ChatMessage[], opts: ChatOptions = {}): Promise<string> {
-  return withFailover(messages, opts, (raw) => raw);
+  return withFailover(messages, { maxTokens: 8000, ...opts }, (raw) => raw);
 }
 
 /**
@@ -230,7 +230,7 @@ export async function chatJSON<T = unknown>(
 ): Promise<T> {
   return withFailover(
     messages,
-    { ...opts, json: true, temperature: opts.temperature ?? 0.4 },
+    { maxTokens: 4000, ...opts, json: true, temperature: opts.temperature ?? 0.4 },
     (raw) => parseJSONLoose<T>(raw)
   );
 }

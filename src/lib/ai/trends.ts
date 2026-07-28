@@ -256,15 +256,22 @@ export async function synthesizeOpportunities(
         .join("\n")}`
     : "";
 
-  const system = `You are the editor-in-chief of DeskNomads, an authority site about AI tools, remote work, and online income. Your SEO strategy is to win LONG-TAIL, LOW-COMPETITION searches — specific, practical, "how-to" and "best free X" content that ranks fast because big sites ignore the niche. You turn trending signals into these specific article opportunities. You only propose ideas that genuinely fit these categories: ${CATEGORIES.join(", ")}.`;
+  const batchSize = 4;
+  const numBatches = Math.ceil(count / batchSize);
+  let allNormalized: CandidateOpportunity[] = [];
+  const urlByTitle = new Map(signals.map((s) => [s.title, s.url]));
 
-  const user = `Here are trending signals gathered today from Hacker News, Reddit, Google Trends, and news sources:
+  for (let b = 0; b < numBatches; b++) {
+    const batchCount = Math.min(batchSize, count - b * batchSize);
+    const system = `You are the editor-in-chief of DeskNomads, an authority site about AI tools, remote work, and online income. Your SEO strategy is to win LONG-TAIL, LOW-COMPETITION searches — specific, practical, "how-to" and "best free X" content that ranks fast because big sites ignore the niche. You turn trending signals into these specific article opportunities. You only propose ideas that genuinely fit these categories: ${CATEGORIES.join(", ")}.`;
+
+    const user = `Here are trending signals gathered today from Hacker News, Reddit, Google Trends, and news sources:
 
 ${signalDigest}${existingBlock}
 
-Propose the ${count} strongest article opportunities for DeskNomads. STRATEGY — be specific and beat low-competition long-tail queries instead of fighting big publishers on broad head terms.
+Propose ${batchCount} strong article opportunities for DeskNomads. STRATEGY — be specific and beat low-competition long-tail queries instead of fighting big publishers on broad head terms.
 
-Use a MIX of these high-click-through title formats (vary them across the batch — do NOT make them all the same shape):
+Use a MIX of these high-click-through title formats (vary them across the batch):
 - Listicle: "Top 10 AI Tools for <specific job>", "7 Free <X> for <audience> (2026)".
 - How-to / step-by-step: "How to <do X> — Step-by-Step (2026)", "How to Use <tool> for <specific task>".
 - Best-of: "Best Free <tool category> for <specific audience> in 2026".
@@ -272,36 +279,37 @@ Use a MIX of these high-click-through title formats (vary them across the batch 
 - Curiosity / insider: "5 <things> Nobody Tells You About <topic>", "Secret <tool> Tricks <audience> Use", "5 <X> Mistakes That Cost You <outcome>".
 - Comparisons of NICHE tools, and "<tool> for <specific job>" guides.
 
-Aim for a balanced spread across the ${count} ideas — e.g. a few "Top N…", a few "How to…", a couple "Best…", one or two "What to do when…/When to…", and one or two curiosity/insider angles.
-
 RULES:
-- REAL SEARCH DEMAND IS REQUIRED. Every topic must be something a meaningful number of people actually search for. AVOID brand-new, no-name, or obscure tools almost nobody has heard of yet (they have ~zero search volume even if competition is low). Prefer well-known tools (ChatGPT, Claude, Gemini, Midjourney, Notion, Excel, Canva, etc.) and common tasks/problems (resume, invoices, data entry, video editing, job search, budgeting, automation) paired with a specific angle.
-- The sweet spot = a topic with proven demand + a specific enough angle/use-case to rank without fighting huge publishers. NOT zero-competition obscurity nobody searches.
-- Titles must be SPECIFIC and curiosity-driven so they earn the click, but honest (no clickbait the article can't deliver).
-- Favor specific long-tail keywords (well-known tool + a use-case + "free"/"2026"/"step by step") over ultra-broad terms like "best AI tools" or "make money online".
-- Tie ideas to the trending signals where possible (freshness).
-- Most ideas should be searchIntent "informational" (how-to / guide / list). Include the year (2026) where natural.
-- Each of the ${count} ideas must be about a DISTINCT topic — no two ideas covering the same tool/task/angle, and nothing overlapping the already-published list above.
+- REAL SEARCH DEMAND IS REQUIRED. Avoid brand-new, obscure tools almost nobody has heard of yet. Prefer well-known tools paired with a specific angle.
+- Titles must be SPECIFIC and curiosity-driven so they earn the click.
+- Favor specific long-tail keywords (well-known tool + a use-case + "free"/"2026"/"step by step") over ultra-broad terms.
+- Most ideas should be searchIntent "informational". Include the year (2026) where natural.
+- Each of the ${batchCount} ideas must be about a DISTINCT topic — no overlapping topics.
 
 Return ONLY JSON of the shape:
-{"opportunities":[{"title":"specific, high-CTR title — vary the format (Top N.../How to.../Best.../What to do when.../curiosity)","topic":"1-sentence description","category":"one of the allowed categories","primaryKeyword":"the specific long-tail search keyword","secondaryKeywords":["related long-tail variants"],"searchIntent":"informational|commercial|transactional|navigational","angle":"the specific niche/use-case that makes this low-competition","sourceUrls":["url1","url2"]}]}`;
+{"opportunities":[{"title":"specific, high-CTR title","topic":"1-sentence description","category":"one of the allowed categories","primaryKeyword":"the specific long-tail search keyword","secondaryKeywords":["related long-tail variants"],"searchIntent":"informational|commercial|transactional|navigational","angle":"the specific niche/use-case that makes this low-competition","sourceUrls":["url1","url2"]}]}`;
 
-  const parsed = await chatJSON<{ opportunities: CandidateOpportunity[] }>([
-    { role: "system", content: system },
-    { role: "user", content: user },
-  ]);
+    try {
+      const parsed = await chatJSON<{ opportunities: CandidateOpportunity[] }>([
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ]);
 
-  const urlByTitle = new Map(signals.map((s) => [s.title, s.url]));
-  const normalized = (parsed.opportunities || []).map((o) => ({
-    ...o,
-    category: CATEGORIES.includes(o.category as never) ? o.category : CATEGORIES[0],
-    secondaryKeywords: o.secondaryKeywords || [],
-    sourceUrls: (o.sourceUrls && o.sourceUrls.length ? o.sourceUrls : [...urlByTitle.values()].slice(0, 2)).filter(
-      Boolean
-    ),
-  }));
+      const normalized = (parsed.opportunities || []).map((o) => ({
+        ...o,
+        category: CATEGORIES.includes(o.category as never) ? o.category : CATEGORIES[0],
+        secondaryKeywords: o.secondaryKeywords || [],
+        sourceUrls: (o.sourceUrls && o.sourceUrls.length ? o.sourceUrls : [...urlByTitle.values()].slice(0, 2)).filter(
+          Boolean
+        ),
+      }));
+      allNormalized.push(...normalized);
+    } catch (err) {
+      console.warn(`[engine:discovery] Batch ${b} failed to synthesize opportunities`, err);
+    }
+  }
 
   // Final safety net: strip near-duplicates the prompt let slip through
   // (against published articles and within this batch).
-  return dedupeCandidates(normalized, existingTitles);
+  return dedupeCandidates(allNormalized, existingTitles);
 }

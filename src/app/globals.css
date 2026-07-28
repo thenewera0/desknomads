@@ -4,46 +4,49 @@
 /* ─── DeskNomads Design System ──────────────────────────────── */
 
 :root {
-  /* Brand Palette — Dark Mode First */
-  --dn-bg: #040B17;
-  --dn-bg-elevated: #0D1A2D;
-  --dn-bg-section-elevated: #071120;
-  --dn-bg-card: #0D1A2D;
-  --dn-bg-card-hover: #122240;
+  /* Brand Palette — Ethereal Glass (Dark Mode First) */
+  --dn-bg: #050505; /* OLED Black */
+  --dn-bg-elevated: #0a0a0a;
+  --dn-bg-section-elevated: #080808;
+  --dn-bg-card: rgba(20, 20, 20, 0.4);
+  --dn-bg-card-hover: rgba(25, 25, 25, 0.6);
   --dn-primary: #3B82F6;
   --dn-primary-hover: #2563EB;
   --dn-accent: #60A5FA;
   --dn-text: #FFFFFF;
-  --dn-text-secondary: #AAB8C5;
-  --dn-text-muted: #6B7B8D;
-  --dn-border: rgba(255, 255, 255, 0.06);
-  --dn-border-hover: rgba(255, 255, 255, 0.12);
-  --dn-success: #22C55E;
+  --dn-text-secondary: #8892B0;
+  --dn-text-muted: #5E6A78;
+  
+  /* Hairline Borders */
+  --dn-border: rgba(255, 255, 255, 0.05);
+  --dn-border-hover: rgba(255, 255, 255, 0.1);
+  --dn-success: #10B981;
   --dn-warning: #F59E0B;
   --dn-danger: #EF4444;
 
-  /* Glass Effect */
-  --dn-glass: rgba(13, 26, 45, 0.72);
-  --dn-glass-border: rgba(255, 255, 255, 0.08);
-  --dn-glass-highlight: rgba(255, 255, 255, 0.04);
+  /* Glass Effect & Nested Bezel */
+  --dn-glass: rgba(10, 10, 10, 0.6);
+  --dn-glass-border: rgba(255, 255, 255, 0.06);
+  --dn-glass-highlight: rgba(255, 255, 255, 0.03);
 
   /* Shadows */
-  --dn-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --dn-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --dn-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --dn-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --dn-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --dn-shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.7);
   --dn-shadow-glow: 0 0 40px rgba(59, 130, 246, 0.15);
+  --dn-shadow-inset: inset 0 1px 1px rgba(255, 255, 255, 0.08);
 
   /* Spacing */
-  --dn-nav-height: 72px;
-  --dn-container: 1320px;
+  --dn-nav-height: 80px;
+  --dn-container: 1400px; /* Slightly wider for immersive feel */
 
-  /* Transitions */
-  --dn-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  /* Transitions & Fluid Motion */
+  --dn-ease: cubic-bezier(0.16, 1, 0.3, 1); /* Apple-esque standard */
   --dn-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --dn-duration: 500ms;
-  --dn-duration-fast: 200ms;
+  --dn-duration: 700ms;
+  --dn-duration-fast: 300ms;
   --dn-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --dn-duration-ui: 200ms;
+  --dn-duration-ui: 250ms;
 }
 
 /* ─── Tailwind Theme Tokens ─────────────────────────────────── */
@@ -124,15 +127,27 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* ─── Glass Card Utility ────────────────────────────────────── */
+/* ─── Glass Card & Double-Bezel Utility ─────────────────────── */
 .glass-card {
-  background: var(--dn-glass);
-  backdrop-filter: blur(20px) saturate(1.5);
-  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  background: var(--dn-bg-card);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
   border: 1px solid var(--dn-glass-border);
   box-shadow: 
-    inset 0 1px 0 var(--dn-glass-highlight),
+    var(--dn-shadow-inset),
     var(--dn-shadow-md);
+  border-radius: 2rem; /* Squircle appearance */
+  padding: 0.5rem; /* Outer shell padding */
+}
+
+/* Inner Core for Double-Bezel */
+.glass-core {
+  background: var(--dn-bg-section-elevated);
+  border-radius: calc(2rem - 0.5rem);
+  height: 100%;
+  width: 100%;
+  box-shadow: var(--dn-shadow-inset);
+  overflow: hidden;
 }
 
 /* ─── Container ─────────────────────────────────────────────── */

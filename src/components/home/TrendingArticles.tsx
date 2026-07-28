@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Clock, Eye, ArrowUpRight } from "@phosphor-icons/react";
 import type { Article } from "@/types";
+import AdSlot from "../shared/AdSlot";
 
 // Demo data — replace with Firestore query
 const trendingArticles: Partial<Article>[] = [
@@ -28,7 +29,7 @@ const trendingArticles: Partial<Article>[] = [
     excerpt:
       "High-paying remote careers you can start with skills alone. From UX to DevOps, here's your roadmap.",
     featuredImage: "https://picsum.photos/seed/remote-work/800/500",
-    category: { name: "Remote Jobs", slug: "remote-jobs", color: "#22C55E" } as Article["category"],
+    category: { name: "Remote Jobs", slug: "remote-jobs", color: "#10B981" } as Article["category"],
     readingTime: 6,
     views: 8900,
     publishedAt: "2025-06-12T10:00:00Z",
@@ -60,171 +61,176 @@ export default function TrendingArticles({ articles }: { articles?: Partial<Arti
   // Server-provided trending articles (SSR); fall back to the seed set if too few.
   const data = articles && articles.length >= 3 ? articles : trendingArticles;
   const featured = data[0];
-  const secondary = data.slice(1, 3);
+  const secondary = data[1];
+  const tertiary = data[2];
+
+  const ease = [0.16, 1, 0.3, 1] as const;
+
+  const fadeUp = (delay: number) =>
+    reduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 32, filter: "blur(8px)" } as const,
+          whileInView: { opacity: 1, y: 0, filter: "blur(0px)" } as const,
+          viewport: { once: true, amount: 0.1 },
+          transition: { duration: 0.9, delay, ease },
+        };
 
   return (
-    <section 
-      className="py-24 md:py-32 border-t border-b border-white/[0.04]"
-      style={{
-        backgroundColor: "#070E1A", // Distinct section tone to prevent merging
-        position: "relative",
-        zIndex: 10,
-      }}
-    >
+    <section className="relative w-full z-20" style={{ backgroundColor: "var(--dn-bg)" }}>
       <div className="dn-container">
+        
         {/* Section header */}
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-end justify-between"
-          style={{ marginBottom: "40px" }}
-        >
+        <motion.div {...fadeUp(0)} className="flex items-end justify-between mb-16">
           <div>
-            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
-              Trending <span className="font-serif italic font-normal text-[var(--dn-accent)]">Now</span>
+            <div className="inline-flex items-center gap-2 mb-4">
+               <span className="w-1.5 h-1.5 rounded-full bg-[var(--dn-accent)] shadow-[0_0_8px_var(--dn-accent)]" />
+               <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--dn-text-muted)]">
+                 The Algorithm&apos;s Pick
+               </span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white leading-none drop-shadow-lg">
+              Trending <span className="font-serif italic font-normal text-[var(--dn-accent)] text-transparent bg-clip-text bg-gradient-to-r from-[var(--dn-accent)] to-[var(--dn-primary)]">Now</span>
             </h2>
-            <p className="text-xs text-[var(--dn-text-muted)] mt-1.5 uppercase tracking-wider">
-              Most-read articles this week
-            </p>
           </div>
           <Link
             href="/trending"
-            className="hidden md:flex items-center gap-1 text-xs font-semibold text-[var(--dn-accent)]
-                     hover:text-white transition-colors duration-300"
+            className="group hidden md:flex items-center gap-2 text-xs font-semibold text-[var(--dn-text-secondary)]
+                     hover:text-white transition-colors duration-[var(--dn-duration-fast)] uppercase tracking-widest"
           >
             View all
-            <ArrowUpRight size={13} weight="light" />
+            <ArrowUpRight size={14} className="group-hover:translate-x-[2px] group-hover:-translate-y-[2px] transition-transform" />
           </Link>
         </motion.div>
 
-        {/* Bento Grid: 1 large + 2 stacked */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Large featured card */}
+        {/* The Asymmetrical Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          
+          {/* Main Feature: Col span 2, Row span 2 on large screens */}
           <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            whileHover={reduceMotion ? {} : { y: -4 }}
-            whileTap={reduceMotion ? {} : { scale: 0.99 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 flex"
+            {...fadeUp(0.1)}
+            className="lg:col-span-2 lg:row-span-2"
           >
             <Link href={`/${featured.slug}`} className="group block w-full h-full">
-              <article
-                className="relative flex-1 rounded-xl overflow-hidden border border-white/[0.05]
-                         bg-[var(--dn-bg-card)] hover:border-white/[0.1] hover:bg-white/[0.02]
-                         transition-all duration-300 ease-[var(--dn-ease-out)] flex flex-col h-full"
-              >
-                {/* Image */}
-                <div className="relative aspect-[16/10] overflow-hidden flex-shrink-0">
-                  <Image
-                    src={featured.featuredImage!}
-                    alt={featured.title!}
-                    fill
-                    className="object-cover transition-transform duration-700 ease-[var(--dn-ease)]
-                             group-hover:scale-[1.02]"
-                    sizes="(max-width: 768px) 100vw, 60vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--dn-bg-card)] via-transparent to-transparent opacity-80" />
+              <article className="glass-card h-full min-h-[400px] flex flex-col group-hover:bg-white/[0.04] transition-colors duration-[var(--dn-duration)]">
+                <div className="glass-core relative flex flex-col justify-end p-8 lg:p-12 overflow-hidden">
+                  {/* Background Image inside core */}
+                  <div className="absolute inset-0 z-0">
+                    <Image
+                      src={featured.featuredImage!}
+                      alt={featured.title!}
+                      fill
+                      className="object-cover opacity-70 group-hover:scale-105 group-hover:opacity-80 transition-all duration-[1200ms] ease-[var(--dn-ease)]"
+                      sizes="(max-width: 1024px) 100vw, 66vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--dn-bg-section-elevated)] via-[rgba(8,8,8,0.7)] to-transparent" />
+                  </div>
 
-                  {/* Category badge */}
-                  <div className="absolute top-4 left-4">
+                  {/* Content over image */}
+                  <div className="relative z-10 w-full lg:w-4/5 mt-32">
                     <span
-                      className="px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-wider
-                                backdrop-blur-md bg-white/[0.04] border border-white/[0.08]"
+                      className="inline-block px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest mb-4
+                                backdrop-blur-md bg-white/[0.04] border border-white/[0.1] shadow-xl"
                       style={{ color: featured.category!.color }}
                     >
                       {featured.category!.name}
                     </span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-lg md:text-xl font-extrabold text-white leading-snug mb-3 group-hover:text-[var(--dn-accent)] transition-colors duration-300">
+                    <h3 className="text-2xl md:text-4xl font-extrabold text-white leading-[1.15] mb-4 group-hover:text-[var(--dn-accent)] transition-colors duration-[var(--dn-duration-fast)]">
                       {featured.title}
                     </h3>
-                    <p className="text-xs md:text-sm text-[var(--dn-text-secondary)] leading-relaxed line-clamp-2 mb-4">
+                    <p className="text-sm md:text-base text-[var(--dn-text-secondary)] leading-relaxed line-clamp-2 mb-6 max-w-[60ch]">
                       {featured.excerpt}
                     </p>
-                  </div>
-                  <div className="flex items-center gap-4 text-[10px] font-mono text-[var(--dn-text-muted)] mt-auto">
-                    <span className="flex items-center gap-1">
-                      <Clock size={12} weight="light" />
-                      {featured.readingTime} min read
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Eye size={12} weight="light" />
-                      {formatViews(featured.views!)} views
-                    </span>
+                    
+                    <div className="flex items-center gap-6 text-xs font-mono text-white/60">
+                      <span className="flex items-center gap-2">
+                        <Clock size={14} />
+                        {featured.readingTime} min read
+                      </span>
+                      <span className="flex items-center gap-2">
+                        <Eye size={14} />
+                        {formatViews(featured.views!)} views
+                      </span>
+                    </div>
                   </div>
                 </div>
               </article>
             </Link>
           </motion.div>
 
-          {/* Stacked secondary cards */}
-          <div className="lg:col-span-5 flex flex-col gap-6">
-            {secondary.map((article, i) => (
-              <motion.div
-                key={article.id}
-                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                whileHover={reduceMotion ? {} : { y: -3 }}
-                whileTap={reduceMotion ? {} : { scale: 0.99 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: i * 0.05 }}
-              >
-                <Link href={`/${article.slug}`} className="group block">
-                  <article
-                    className="flex gap-4 p-4 rounded-xl border border-white/[0.05]
-                             bg-[var(--dn-bg-card)] hover:border-white/[0.1] hover:bg-white/[0.02]
-                             transition-all duration-300 ease-[var(--dn-ease-out)]"
+          {/* Secondary Article */}
+          <motion.div {...fadeUp(0.2)}>
+            <Link href={`/${secondary.slug}`} className="group block w-full h-full">
+              <article className="glass-card h-full flex flex-col group-hover:bg-white/[0.04] transition-colors duration-[var(--dn-duration)]">
+                <div className="glass-core relative flex flex-col p-6">
+                  <div className="relative w-full aspect-video rounded-[calc(2rem-1rem)] overflow-hidden mb-6">
+                    <Image
+                      src={secondary.featuredImage!}
+                      alt={secondary.title!}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-[1200ms] ease-[var(--dn-ease)]"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  </div>
+                  <span
+                    className="inline-block text-[9px] font-bold uppercase tracking-widest mb-3"
+                    style={{ color: secondary.category!.color }}
                   >
-                    {/* Thumbnail */}
-                    <div className="relative w-24 h-24 md:w-32 md:h-24 flex-shrink-0 rounded-lg overflow-hidden border border-white/[0.04]">
-                      <Image
-                        src={article.featuredImage!}
-                        alt={article.title!}
-                        fill
-                        className="object-cover transition-transform duration-700 ease-[var(--dn-ease)]
-                                 group-hover:scale-[1.03]"
-                        sizes="130px"
-                      />
-                    </div>
+                    {secondary.category!.name}
+                  </span>
+                  <h3 className="text-lg font-bold text-white leading-snug mb-3 group-hover:text-[var(--dn-accent)] transition-colors">
+                    {secondary.title}
+                  </h3>
+                  <div className="mt-auto flex items-center gap-4 text-[10px] font-mono text-[var(--dn-text-muted)]">
+                    <span className="flex items-center gap-1.5"><Clock size={12} /> {secondary.readingTime}m</span>
+                    <span className="flex items-center gap-1.5"><Eye size={12} /> {formatViews(secondary.views!)}</span>
+                  </div>
+                </div>
+              </article>
+            </Link>
+          </motion.div>
 
-                    {/* Content */}
-                    <div className="flex flex-col justify-between py-0.5 min-w-0 flex-1">
-                      <div>
-                        <span
-                          className="inline-block text-[9px] font-bold uppercase tracking-wider mb-2"
-                          style={{ color: article.category!.color }}
-                        >
-                          {article.category!.name}
-                        </span>
-                        <h3 className="text-sm font-bold text-white leading-snug line-clamp-2 group-hover:text-[var(--dn-accent)] transition-colors duration-300">
-                          {article.title}
-                        </h3>
-                      </div>
-                      <div className="flex items-center gap-3 text-[10px] font-mono text-[var(--dn-text-muted)] mt-2">
-                        <span className="flex items-center gap-1">
-                          <Clock size={11} weight="light" />
-                          {article.readingTime} min
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Eye size={11} weight="light" />
-                          {formatViews(article.views!)}
-                        </span>
-                      </div>
-                    </div>
-                  </article>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+          {/* Integrated AdSlot (instead of a 3rd article on desktop) */}
+          <motion.div {...fadeUp(0.3)} className="hidden md:block">
+            <div className="glass-card h-full flex items-center justify-center relative overflow-hidden bg-[var(--dn-bg-section-elevated)] group">
+               {/* Decorative glass glow inside Ad container */}
+               <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.03),transparent_70%)] pointer-events-none" />
+               <AdSlot id="home-trending-integrated" className="!my-0 !w-full !px-0" />
+            </div>
+          </motion.div>
+
+          {/* Tertiary Article (Mobile only or if Ad is disabled, placed below for mobile) */}
+          <motion.div {...fadeUp(0.4)} className="md:hidden">
+            <Link href={`/${tertiary.slug}`} className="group block w-full h-full">
+              <article className="glass-card h-full flex flex-col group-hover:bg-white/[0.04] transition-colors duration-[var(--dn-duration)]">
+                <div className="glass-core relative flex flex-col p-6">
+                  <div className="relative w-full aspect-video rounded-[calc(2rem-1rem)] overflow-hidden mb-6">
+                    <Image
+                      src={tertiary.featuredImage!}
+                      alt={tertiary.title!}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-[1200ms] ease-[var(--dn-ease)]"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  </div>
+                  <span
+                    className="inline-block text-[9px] font-bold uppercase tracking-widest mb-3"
+                    style={{ color: tertiary.category!.color }}
+                  >
+                    {tertiary.category!.name}
+                  </span>
+                  <h3 className="text-lg font-bold text-white leading-snug mb-3 group-hover:text-[var(--dn-accent)] transition-colors">
+                    {tertiary.title}
+                  </h3>
+                  <div className="mt-auto flex items-center gap-4 text-[10px] font-mono text-[var(--dn-text-muted)]">
+                    <span className="flex items-center gap-1.5"><Clock size={12} /> {tertiary.readingTime}m</span>
+                    <span className="flex items-center gap-1.5"><Eye size={12} /> {formatViews(tertiary.views!)}</span>
+                  </div>
+                </div>
+              </article>
+            </Link>
+          </motion.div>
+
         </div>
       </div>
     </section>

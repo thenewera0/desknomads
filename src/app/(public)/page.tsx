@@ -75,14 +75,13 @@ export default async function HomePage() {
 
       {/* Page Sections */}
       <Hero />
-      <AdSlot id="home-top-banner" />
-      <TrendingArticles articles={trending} />
-      <Categories />
-      <AdSlot id="home-mid-banner" />
-      <TrendingTools tools={tools} />
-      <AdSlot id="home-bottom-banner" />
-      <NewsletterCTA />
-      <LatestArticles articles={latest} />
+      <div className="flex flex-col gap-32 md:gap-48 pb-32">
+        <TrendingArticles articles={trending} />
+        <Categories />
+        <TrendingTools tools={tools} />
+        <NewsletterCTA />
+        <LatestArticles articles={latest} />
+      </div>
     </>
   );
 }

@@ -59,7 +59,7 @@ const allArticles: Partial<Article>[] = [
     slug: "remote-work-india-companies-hiring",
     excerpt: "A curated list of top companies offering remote positions in India with competitive salaries and benefits.",
     featuredImage: "https://picsum.photos/seed/remote-india/600/400",
-    category: { name: "Remote Jobs", slug: "remote-jobs", color: "#22C55E" } as Article["category"],
+    category: { name: "Remote Jobs", slug: "remote-jobs", color: "#10B981" } as Article["category"],
     readingTime: 6,
     publishedAt: "2025-06-10T10:00:00Z",
     tags: ["Remote Work", "India", "Jobs"],
@@ -70,7 +70,7 @@ const allArticles: Partial<Article>[] = [
     slug: "ai-side-hustles-zero-investment",
     excerpt: "Leverage free AI tools to start earning immediately. No upfront costs, no technical skills needed.",
     featuredImage: "https://picsum.photos/seed/side-hustles/600/400",
-    category: { name: "Side Hustles", slug: "side-hustles", color: "#F59E0B" } as Article["category"],
+    category: { name: "Passive Income", slug: "passive-income", color: "#F59E0B" } as Article["category"],
     readingTime: 9,
     publishedAt: "2025-06-09T10:00:00Z",
     tags: ["Side Hustles", "AI"],
@@ -93,38 +93,42 @@ export default function LatestArticles({ articles }: { articles?: Partial<Articl
   const visible = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
 
+  const fadeUp = (delay: number) =>
+    reduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 32, filter: "blur(8px)" } as const,
+          whileInView: { opacity: 1, y: 0, filter: "blur(0px)" } as const,
+          viewport: { once: true, amount: 0.1 },
+          transition: { duration: 0.9, delay, ease: [0.16, 1, 0.3, 1] },
+        };
+
   return (
-    <section 
-      className="pt-24 md:pt-36 pb-32 md:pb-48"
-      style={{
-        backgroundColor: "#040B17",
-        borderTop: "1px solid rgba(255, 255, 255, 0.04)",
-        position: "relative",
-        zIndex: 10,
-      }}
-    >
+    <section className="relative w-full z-10 pt-24 md:pt-36 pb-32 md:pb-48" style={{ backgroundColor: "var(--dn-bg)" }}>
       <div className="dn-container">
-        {/* Section header */}
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-6"
-          style={{ marginBottom: "48px" }}
-        >
-          <div>
-            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white mb-2">
-              Latest <span className="font-serif italic font-normal text-[var(--dn-accent)]">Articles</span>
+        
+        {/* Header Area */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16">
+          <motion.div {...fadeUp(0)}>
+            <div className="inline-flex items-center gap-2 mb-4">
+               <span className="w-1.5 h-1.5 rounded-full bg-[var(--dn-accent)] shadow-[0_0_8px_var(--dn-accent)]" />
+               <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--dn-text-muted)]">
+                 Recent Dispatches
+               </span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-2 drop-shadow-lg">
+              Latest <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[var(--dn-accent)] to-[var(--dn-primary)]">Articles</span>
             </h2>
-            <p className="text-xs text-[var(--dn-text-muted)] uppercase tracking-wider">
-              Fresh content published regularly
+            <p className="text-sm md:text-base text-[var(--dn-text-secondary)] max-w-[45ch]">
+              Fresh insights and guides on digital independence published regularly.
             </p>
-          </div>
+          </motion.div>
 
           {/* Filters */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-            <FunnelSimple size={14} weight="light" className="text-[var(--dn-text-muted)] mr-1 flex-shrink-0" />
+          <motion.div {...fadeUp(0.1)} className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[var(--dn-bg-card)] border border-[var(--dn-glass-border)] flex-shrink-0 mr-1 shadow-sm">
+              <FunnelSimple size={14} weight="duotone" className="text-[var(--dn-text-muted)]" />
+            </div>
             {filterOptions.map((opt) => (
               <button
                 key={opt}
@@ -132,91 +136,91 @@ export default function LatestArticles({ articles }: { articles?: Partial<Articl
                   setFilter(opt);
                   setVisibleCount(6);
                 }}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap
-                         transition-all duration-200 ease-[var(--dn-ease-out)] active:scale-[0.98] ${
+                className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap
+                         transition-all duration-[var(--dn-duration-fast)] ease-[var(--dn-ease-out)] active:scale-[0.98] ${
                            filter === opt
-                             ? "bg-[var(--dn-primary)] text-white"
-                             : "bg-white/[0.04] text-[var(--dn-text-secondary)] hover:bg-white/[0.08] hover:text-white"
+                             ? "bg-white text-black shadow-lg shadow-white/10"
+                             : "bg-[var(--dn-bg-card)] border border-[var(--dn-glass-border)] text-[var(--dn-text-secondary)] hover:bg-white/[0.08] hover:text-white"
                          }`}
               >
                 {opt}
               </button>
             ))}
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
 
-        {/* Articles Grid — clean uniform cards with Read More */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
-             style={{ marginBottom: "64px" }}>
+        {/* Articles Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16">
           {visible.map((article, i) => (
             <motion.div
               key={article.id}
-              initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              whileHover={reduceMotion ? {} : { y: -4 }}
-              transition={{
-                duration: 0.4,
-                ease: [0.16, 1, 0.3, 1],
-                delay: reduceMotion ? 0 : (i % 3) * 0.05,
-              }}
-              className="flex"
+              {...fadeUp(0.1 + (i % 3) * 0.1)}
+              className="h-full flex"
             >
               <Link
                 href={`/${article.slug}`}
-                className="group flex flex-col w-full h-full rounded-2xl overflow-hidden
-                         border border-white/[0.06] bg-[var(--dn-bg-card)]
-                         hover:border-[var(--dn-primary)]/30 hover:bg-white/[0.02]
-                         transition-all duration-300 ease-[var(--dn-ease-out)]"
+                className="group w-full h-full"
               >
-                {/* Thumbnail */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden flex-shrink-0 bg-white/[0.03]">
-                  {article.featuredImage ? (
-                    <Image
-                      src={article.featuredImage}
-                      alt={article.title || "Article"}
-                      fill
-                      className="object-cover transition-transform duration-700 ease-[var(--dn-ease)] group-hover:scale-[1.04]"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[var(--dn-primary)]/15 to-transparent text-[var(--dn-text-muted)] text-xs">
-                      DeskNomads
-                    </div>
-                  )}
-                  <div className="absolute top-3 left-3">
-                    <span
-                      className="px-2.5 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider
-                                backdrop-blur-md bg-black/40 border border-white/[0.12]"
-                      style={{ color: article.category?.color || "#60A5FA" }}
-                    >
-                      {article.category?.name || "Article"}
-                    </span>
-                  </div>
-                </div>
+                <div className="glass-card h-full flex flex-col group-hover:bg-white/[0.04] transition-colors duration-[var(--dn-duration)] p-1.5">
+                  <div className="glass-core h-full flex flex-col overflow-hidden relative">
+                    
+                    {/* Background glow on hover */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-[var(--dn-duration)] pointer-events-none z-10"
+                         style={{ background: `radial-gradient(circle at top right, ${article.category?.color || '#3B82F6'}, transparent 70%)` }} />
+                    
+                    {/* Thumbnail Container */}
+                    <div className="relative aspect-[16/10] w-full overflow-hidden flex-shrink-0 bg-[var(--dn-bg-elevated)] border-b border-[var(--dn-glass-border)] z-0">
+                      {article.featuredImage ? (
+                        <Image
+                          src={article.featuredImage}
+                          alt={article.title || "Article"}
+                          fill
+                          className="object-cover transition-transform duration-1000 ease-[var(--dn-ease)] group-hover:scale-[1.05]"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[var(--dn-primary)]/15 to-transparent text-[var(--dn-text-muted)] text-xs">
+                          DeskNomads
+                        </div>
+                      )}
+                      
+                      {/* Image Overlay Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#09111f] via-transparent to-transparent opacity-80 z-10 pointer-events-none" />
 
-                {/* Content */}
-                <div className="flex flex-col flex-1 p-5 md:p-6">
-                  <h3 className="text-base md:text-lg font-bold text-white leading-snug mb-2.5 line-clamp-2 group-hover:text-[var(--dn-accent)] transition-colors duration-300">
-                    {article.title}
-                  </h3>
-                  <p className="text-[13px] text-[var(--dn-text-secondary)] leading-relaxed line-clamp-2 mb-4">
-                    {article.excerpt}
-                  </p>
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-white/[0.05]">
-                    <span className="flex items-center gap-1.5 text-[11px] text-[var(--dn-text-muted)]">
-                      <Clock size={12} weight="light" />
-                      {article.readingTime} min read
-                    </span>
-                    <span
-                      className="inline-flex items-center gap-1.5 h-8 px-4 rounded-full
-                               bg-[var(--dn-primary)] group-hover:bg-[var(--dn-primary-hover)]
-                               text-white text-[12px] font-semibold
-                               transition-all duration-200 ease-[var(--dn-ease-out)]"
-                    >
-                      Read More
-                      <ArrowRight size={13} weight="bold" className="group-hover:translate-x-0.5 transition-transform duration-200" />
-                    </span>
+                      <div className="absolute top-3 left-3 z-20">
+                        <span
+                          className="px-2.5 py-1 rounded-md text-[9px] font-bold uppercase tracking-widest
+                                    backdrop-blur-md bg-black/60 border border-white/[0.15] shadow-lg"
+                          style={{ color: article.category?.color || "#60A5FA" }}
+                        >
+                          {article.category?.name || "Article"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Content Section */}
+                    <div className="flex flex-col flex-1 p-6 relative z-20">
+                      <h3 className="text-xl font-bold text-white leading-tight mb-3 line-clamp-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[var(--dn-accent)] group-hover:to-[var(--dn-primary)] transition-all duration-[var(--dn-duration-fast)]">
+                        {article.title}
+                      </h3>
+                      <p className="text-[13px] text-[var(--dn-text-secondary)] leading-relaxed line-clamp-2 mb-6">
+                        {article.excerpt}
+                      </p>
+                      
+                      {/* Footer */}
+                      <div className="mt-auto flex items-center justify-between pt-4 border-t border-[var(--dn-glass-border)]">
+                        <span className="flex items-center gap-1.5 text-[11px] font-mono text-[var(--dn-text-muted)]">
+                          <Clock size={14} weight="duotone" className="text-[var(--dn-text-secondary)]" />
+                          {article.readingTime} min read
+                        </span>
+                        
+                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[var(--dn-bg-card)] border border-[var(--dn-glass-border)] group-hover:bg-[var(--dn-primary)] group-hover:border-[var(--dn-primary)] transition-all duration-[var(--dn-duration-fast)] overflow-hidden relative">
+                           <ArrowRight size={14} weight="bold" className="text-white absolute transition-transform duration-[var(--dn-duration-fast)] ease-[var(--dn-ease-spring)] -translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100" />
+                           <ArrowRight size={14} weight="bold" className="text-white absolute transition-transform duration-[var(--dn-duration-fast)] ease-[var(--dn-ease-spring)] translate-x-0 opacity-100 group-hover:translate-x-4 group-hover:opacity-0" />
+                        </div>
+                      </div>
+                    </div>
+                    
                   </div>
                 </div>
               </Link>
@@ -226,22 +230,22 @@ export default function LatestArticles({ articles }: { articles?: Partial<Articl
 
         {/* Load More */}
         {hasMore && (
-          <div className="flex justify-center mt-12">
+          <motion.div {...fadeUp(0.2)} className="flex justify-center">
             <button
               onClick={() => setVisibleCount((prev) => prev + 6)}
-              className="group h-11 px-7 rounded-full border border-white/[0.1] hover:border-white/[0.2]
-                       text-sm text-[var(--dn-text-secondary)] hover:text-white
-                       hover:bg-white/[0.04] transition-all duration-200 ease-[var(--dn-ease-out)]
-                       active:scale-[0.97] inline-flex items-center gap-2"
+              className="group h-12 px-8 rounded-xl border border-[var(--dn-glass-border)] bg-[var(--dn-bg-card)]
+                       text-sm font-semibold text-white hover:bg-white/[0.06] hover:border-white/[0.15]
+                       transition-all duration-[var(--dn-duration-fast)] ease-[var(--dn-ease-out)]
+                       active:scale-[0.98] inline-flex items-center gap-3 shadow-[var(--dn-shadow-inset)]"
             >
               Load more articles
               <ArrowRight
                 size={14}
-                weight="light"
-                className="group-hover:translate-x-0.5 transition-transform duration-200 ease-[var(--dn-ease-out)]"
+                weight="bold"
+                className="group-hover:translate-x-1 transition-transform duration-[var(--dn-duration-fast)] ease-[var(--dn-ease-out)] text-[var(--dn-accent)]"
               />
             </button>
-          </div>
+          </motion.div>
         )}
       </div>
     </section>
