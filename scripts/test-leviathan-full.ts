@@ -53,3 +53,5 @@ Return ONLY JSON of the shape:
 }
 
 test();
+
+export {};
