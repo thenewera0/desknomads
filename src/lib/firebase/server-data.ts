@@ -21,7 +21,7 @@ function tsToIso(v: unknown): string | null {
  * not surfaced or indexed. Reversible: raise a stub past the threshold and it
  * automatically re-enters listings and the sitemap.
  */
-export const MIN_INDEXABLE_WORDS = 1000;
+export const MIN_INDEXABLE_WORDS = 700;
 
 /** Effective word count from the stored field, falling back to the HTML body. */
 export function articleWordCount(d: { wordCount?: number; content?: string }): number {
