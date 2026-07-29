@@ -399,7 +399,7 @@ export default async function ArticlePage({
         />
       )}
 
-      <article className="pt-32 md:pt-40 pb-12 md:pb-16">
+      <article className="pb-12 md:pb-16" style={{ paddingTop: "140px" }}>
         <div className="dn-container">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-xs text-[var(--dn-text-muted)] mb-8">
