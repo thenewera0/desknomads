@@ -122,6 +122,7 @@ export default function TrendingArticles({ articles }: { articles?: Partial<Arti
                       fill
                       className="object-cover opacity-70 group-hover:scale-105 group-hover:opacity-80 transition-all duration-[1200ms] ease-[var(--dn-ease)]"
                       sizes="(max-width: 1024px) 100vw, 66vw"
+                      priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[var(--dn-bg-section-elevated)] via-[rgba(8,8,8,0.7)] to-transparent" />
                   </div>

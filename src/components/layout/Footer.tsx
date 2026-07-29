@@ -40,7 +40,7 @@ export default function Footer() {
     <footer 
       style={{
         marginTop: "128px", // Massive top margin to separate it from the content!
-        backgroundColor: "#071120",
+        backgroundColor: "var(--dn-bg-elevated)",
         borderTop: "1px solid rgba(255, 255, 255, 0.06)",
         position: "relative",
         zIndex: 10,
@@ -117,7 +117,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-[var(--dn-text-secondary)] hover:text-[var(--dn-accent)] group flex items-center gap-1.5
-                             transition-all duration-200 ease-[var(--dn-ease-out)] active:scale-[0.97] inline-block"
+                             transition-all duration-200 ease-[var(--dn-ease-out)] active:scale-[0.97]"
                   >
                     {link.label}
                     <Globe size={12} weight="light" className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   List,
@@ -30,6 +31,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -71,7 +73,7 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-40 transition-all duration-500"
         style={{
           height: "var(--dn-nav-height)",
-          backgroundColor: scrolled ? "var(--dn-bg)" : "rgba(4, 11, 23, 0.85)",
+          backgroundColor: scrolled ? "var(--dn-bg)" : "rgba(5, 5, 5, 0.85)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
           borderBottom: scrolled ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid rgba(255, 255, 255, 0.04)",
@@ -91,30 +93,36 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
-            {navLinks.slice(0, 5).map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-3.5 py-2 text-[13px] font-medium text-[var(--dn-text-secondary)] 
-                         hover:text-white transition-all duration-200 ease-[var(--dn-ease-out)] rounded-lg
-                         hover:bg-white/[0.04] active:scale-[0.97]"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.slice(0, 5).map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`px-3.5 py-2 text-[13px] font-medium transition-all duration-200 ease-[var(--dn-ease-out)] rounded-lg hover:bg-white/[0.04] active:scale-[0.97] ${
+                    isActive ? "text-white bg-white/[0.04]" : "text-[var(--dn-text-secondary)] hover:text-white"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <Link
               href="/tools"
-              className="px-3.5 py-2 text-[13px] font-medium text-[var(--dn-accent)]
-                       hover:text-white transition-all duration-200 ease-[var(--dn-ease-out)] rounded-lg
-                       hover:bg-white/[0.04] active:scale-[0.97]"
+              aria-current={pathname === "/tools" ? "page" : undefined}
+              className={`px-3.5 py-2 text-[13px] font-medium transition-all duration-200 ease-[var(--dn-ease-out)] rounded-lg hover:bg-white/[0.04] active:scale-[0.97] ${
+                pathname === "/tools" ? "text-white bg-white/[0.04]" : "text-[var(--dn-accent)] hover:text-white"
+              }`}
             >
               Tool Directory
             </Link>
             <Link
               href="/open-source"
-              className="px-3.5 py-2 text-[13px] font-medium text-amber-400
-                       hover:text-amber-300 transition-all duration-200 ease-[var(--dn-ease-out)] rounded-lg
-                       hover:bg-white/[0.04] active:scale-[0.97] flex items-center gap-1.5"
+              aria-current={pathname === "/open-source" ? "page" : undefined}
+              className={`px-3.5 py-2 text-[13px] font-medium transition-all duration-200 ease-[var(--dn-ease-out)] rounded-lg hover:bg-white/[0.04] active:scale-[0.97] flex items-center gap-1.5 ${
+                pathname === "/open-source" ? "text-amber-300 bg-white/[0.04]" : "text-amber-400 hover:text-amber-300"
+              }`}
             >
               <Cube size={14} weight="fill" />
               Open Source
@@ -184,12 +192,13 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-30 bg-[rgba(4,11,23,0.85)] backdrop-blur-3xl saturate-150 border-l border-white/[0.04] lg:hidden"
+            className="fixed inset-0 z-30 bg-[rgba(5,5,5,0.85)] backdrop-blur-3xl saturate-150 border-l border-white/[0.04] lg:hidden"
             style={{ paddingTop: "var(--dn-nav-height)" }}
           >
             <nav className="dn-container py-8 flex flex-col gap-2">
               {navLinks.map((link, i) => {
                 const Icon = link.icon;
+                const isActive = pathname === link.href;
                 return (
                   <motion.div
                     key={link.href}
@@ -204,9 +213,12 @@ export default function Navbar() {
                     <Link
                       href={link.href}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-4 px-4 py-4 rounded-xl
-                               text-[var(--dn-text-secondary)] hover:text-white
-                               hover:bg-white/[0.04] transition-all duration-200 ease-[var(--dn-ease-out)] active:scale-[0.97]"
+                      aria-current={isActive ? "page" : undefined}
+                      className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-200 ease-[var(--dn-ease-out)] active:scale-[0.97] ${
+                        isActive 
+                          ? "text-white bg-white/[0.06]" 
+                          : "text-[var(--dn-text-secondary)] hover:text-white hover:bg-white/[0.04]"
+                      }`}
                     >
                       <Icon size={22} weight="light" className="text-[var(--dn-accent)]" />
                       <span className="text-lg font-medium">{link.label}</span>

@@ -185,7 +185,7 @@ export default function LatestArticles({ articles }: { articles?: Partial<Articl
                       )}
                       
                       {/* Image Overlay Gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#09111f] via-transparent to-transparent opacity-80 z-10 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-80 z-10 pointer-events-none" />
 
                       <div className="absolute top-3 left-3 z-20">
                         <span
@@ -200,7 +200,7 @@ export default function LatestArticles({ articles }: { articles?: Partial<Articl
 
                     {/* Content Section */}
                     <div className="flex flex-col flex-1 p-6 relative z-20">
-                      <h3 className="text-xl font-bold text-white leading-tight mb-3 line-clamp-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[var(--dn-accent)] group-hover:to-[var(--dn-primary)] transition-all duration-[var(--dn-duration-fast)]">
+                      <h3 className="text-xl font-bold text-white leading-tight mb-3 line-clamp-2 group-hover:text-[var(--dn-accent)] transition-colors duration-[var(--dn-duration-fast)]">
                         {article.title}
                       </h3>
                       <p className="text-[13px] text-[var(--dn-text-secondary)] leading-relaxed line-clamp-2 mb-6">

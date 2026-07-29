@@ -58,7 +58,7 @@ export default function Hero() {
         >
           AI Tools, Remote Jobs
           <br />
-          <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[var(--dn-accent)] to-[var(--dn-primary)]">
+          <span className="font-serif italic font-normal text-[var(--dn-accent)]">
             &amp; Future Income
           </span>
         </motion.h1>

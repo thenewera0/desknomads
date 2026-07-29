@@ -545,11 +545,12 @@ export default async function ArticlePage({
                     <Link
                       key={tag}
                       href={`/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`}
-                      className="px-3 py-1.5 rounded-full text-[11px] font-medium
+                      className="relative px-3 py-1.5 rounded-full text-[11px] font-medium
                                bg-white/[0.04] text-[var(--dn-text-secondary)]
                                hover:bg-white/[0.08] hover:text-white
                                border border-white/[0.04] hover:border-white/[0.08]
-                               transition-all duration-300"
+                               transition-all duration-300
+                               after:absolute after:-inset-y-2 after:-inset-x-1 after:content-['']"
                     >
                       #{tag}
                     </Link>
