@@ -56,7 +56,7 @@ const organizationSchema = {
 export default async function HomePage() {
   // Server-fetch real content so it's in the initial HTML (SEO + no demo flash).
   const [latest, trending, tools] = await Promise.all([
-    getArticleCards({ limit: 24 }).catch(() => []),
+    getArticleCards({ limit: 100 }).catch(() => []),
     getArticleCards({ limit: 3, trendingOnly: true }).catch(() => []),
     getApprovedTools(24).catch(() => []),
   ]);

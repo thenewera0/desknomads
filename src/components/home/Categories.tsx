@@ -116,7 +116,7 @@ function CategoryCard({ cat, index, reduceMotion }: CategoryCardProps) {
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className="glass-card h-full flex flex-col group-hover:bg-white/[0.04] transition-colors duration-[var(--dn-duration)] p-1.5"
+          className="glass-card h-full flex flex-col group-hover:bg-white/[0.04] transition-colors duration-[var(--dn-duration)]"
         >
           <div className="glass-core relative p-6 h-full flex flex-col items-start justify-between">
             {/* Glow effect on hover */}

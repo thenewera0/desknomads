@@ -136,7 +136,7 @@ function ToolCard({ tool, index, reduceMotion }: ToolCardProps) {
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className="glass-card h-full flex flex-col group-hover:bg-white/[0.04] transition-colors duration-[var(--dn-duration)] p-1.5"
+          className="glass-card h-full flex flex-col group-hover:bg-white/[0.04] transition-colors duration-[var(--dn-duration)]"
         >
           <div className="glass-core relative p-5 h-full flex flex-col justify-between">
             {/* Spotlight cursor glow */}
@@ -324,7 +324,7 @@ export default function TrendingTools({ tools }: { tools?: Partial<Tool>[] }) {
 
           {/* Integrated AdSlot filling the 6th spot */}
           <motion.div {...fadeUp(0.3)} className="h-full min-h-[160px]">
-             <div className="glass-card h-full flex items-center justify-center relative overflow-hidden bg-[var(--dn-bg-section-elevated)] p-1.5">
+             <div className="glass-card h-full flex items-center justify-center relative overflow-hidden bg-[var(--dn-bg-section-elevated)] group">
                <div className="glass-core flex items-center justify-center relative">
                  <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.02),transparent_70%)] pointer-events-none" />
                  <AdSlot id="home-tools-integrated" className="!my-0 !w-full !px-0" />

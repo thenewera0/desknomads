@@ -161,7 +161,7 @@ export default function LatestArticles({ articles }: { articles?: Partial<Articl
                 href={`/${article.slug}`}
                 className="group w-full h-full"
               >
-                <div className="glass-card h-full flex flex-col group-hover:bg-white/[0.04] transition-colors duration-[var(--dn-duration)] p-1.5">
+                <div className="glass-card h-full flex flex-col group-hover:bg-white/[0.04] transition-colors duration-[var(--dn-duration)]">
                   <div className="glass-core h-full flex flex-col overflow-hidden relative">
                     
                     {/* Background glow on hover */}
