@@ -2,9 +2,35 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight, GithubLogo, Crown, RocketLaunch } from "@phosphor-icons/react";
+import { 
+  ArrowUpRight, 
+  GithubLogo, 
+  Crown, 
+  RocketLaunch,
+  Cpu, 
+  CodeBlock, 
+  Network, 
+  PaintBrush, 
+  Database, 
+  MagicWand, 
+  ImageSquare, 
+  ChatTeardropText, 
+  BookOpenText
+} from "@phosphor-icons/react";
 
 import { resourceCategories } from "@/data/openSourceResources";
+
+const categoryIcons = [
+  Cpu,
+  CodeBlock,
+  Network,
+  PaintBrush,
+  Database,
+  MagicWand,
+  ImageSquare,
+  ChatTeardropText,
+  BookOpenText
+];
 
 export default function OpenSourceClient() {
   return (
@@ -40,10 +66,18 @@ export default function OpenSourceClient() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.5 }}
-              className="border-l-4 border-[var(--dn-accent)] pl-4"
+              className="border-l-4 border-[var(--dn-accent)] pl-4 flex items-start gap-4"
             >
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">{category.title}</h2>
-              <p className="text-[var(--dn-text-secondary)] text-sm md:text-base max-w-2xl">{category.description}</p>
+              <div className="hidden sm:flex shrink-0 p-3 bg-white/[0.03] rounded-xl border border-white/[0.05] mt-1 shadow-[var(--dn-shadow-inset)]">
+                {(() => {
+                  const Icon = categoryIcons[catIndex] || Crown;
+                  return <Icon size={24} weight="duotone" className="text-[var(--dn-accent)]" />;
+                })()}
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">{category.title}</h2>
+                <p className="text-[var(--dn-text-secondary)] text-sm md:text-base max-w-2xl">{category.description}</p>
+              </div>
             </motion.div>
 
             {/* Category Grid */}

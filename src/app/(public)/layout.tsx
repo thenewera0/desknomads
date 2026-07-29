@@ -11,7 +11,7 @@ export default function PublicLayout({
     <div className="flex flex-col min-h-screen">
       <Navbar />
       {/* Offset for the fixed navbar + a small comfort buffer below it */}
-      <main className="flex-1 pt-[calc(var(--dn-nav-height)+1.5rem)]">{children}</main>
+      <main className="flex-1 pt-24 md:pt-28">{children}</main>
       <Footer />
       <BackToTop />
     </div>
