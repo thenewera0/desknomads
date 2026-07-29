@@ -36,7 +36,7 @@ export default function OpenSourceClient() {
   return (
     <div className="min-h-screen w-full relative pt-32 md:pt-48 pb-32" style={{ backgroundColor: "var(--dn-bg)" }}>
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center mb-16 md:mb-24 z-10">
+      <section className="relative px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center mb-16 md:mb-24 z-10 pt-24 md:pt-32">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -102,6 +102,12 @@ export default function OpenSourceClient() {
                       </div>
                       
                       <div className="flex-grow z-10 w-full mb-8">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/[0.05] to-transparent border border-white/[0.05] flex items-center justify-center mb-4 shadow-[var(--dn-shadow-inset)] group-hover:border-[var(--dn-accent)]/30 transition-colors duration-[var(--dn-duration-fast)]">
+                           {(() => {
+                             const Icon = categoryIcons[catIndex] || Crown;
+                             return <Icon size={24} weight="duotone" className="text-[var(--dn-accent)]" />;
+                           })()}
+                        </div>
                         <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[var(--dn-accent)] transition-colors duration-[var(--dn-duration-fast)]">
                           {tool.name}
                         </h3>
