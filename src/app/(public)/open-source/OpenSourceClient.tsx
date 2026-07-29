@@ -188,6 +188,91 @@ const tools = [
     github: "https://github.com/unslothai/unsloth",
     tags: ["Core", "Finetuning", "Fast"],
   },
+  
+  // PDF Guides & Cheat Sheets
+  {
+    name: "Prompt Engineering Guide",
+    description: "A comprehensive guide and repository for prompt engineering by DAIR.AI.",
+    url: "https://www.promptingguide.ai/",
+    github: "https://github.com/dair-ai/Prompt-Engineering-Guide",
+    tags: ["Guide", "Prompting", "Learn"],
+  },
+  {
+    name: "The LLM University",
+    description: "Cohere's comprehensive curriculum for natural language processing.",
+    url: "https://cohere.com/llmu",
+    github: "https://github.com/cohere-ai/llmu",
+    tags: ["Course", "LLMs", "Learn"],
+  },
+  {
+    name: "Machine Learning Yearning",
+    description: "Free draft of Andrew Ng's book on structuring machine learning projects.",
+    url: "https://www.deeplearning.ai/machine-learning-yearning/",
+    github: "https://github.com/ajaymache/machine-learning-yearning",
+    tags: ["Book", "ML", "Andrew Ng"],
+  },
+
+  // Databases & Datasets
+  {
+    name: "Kaggle Datasets",
+    description: "Explore, analyze, and share quality data. Find the perfect dataset for your next ML project.",
+    url: "https://www.kaggle.com/datasets",
+    github: "https://github.com/Kaggle",
+    tags: ["Data", "Community", "ML"],
+  },
+  {
+    name: "Hugging Face Datasets",
+    description: "The largest open-source collection of ML datasets for NLP, Vision, and Audio.",
+    url: "https://huggingface.co/datasets",
+    github: "https://github.com/huggingface/datasets",
+    tags: ["Data", "NLP", "Vision"],
+  },
+  {
+    name: "Civitai",
+    description: "The premier platform for sharing and discovering custom Stable Diffusion models.",
+    url: "https://civitai.com/",
+    github: "https://github.com/civitai/civitai",
+    tags: ["Models", "Images", "Community"],
+  },
+
+  // Assets & UI/UX Productivity
+  {
+    name: "Vercel v0",
+    description: "Generative UI system by Vercel. Build React components with text prompts.",
+    url: "https://v0.dev/",
+    github: "https://github.com/vercel",
+    tags: ["UI", "Generative", "React"],
+  },
+  {
+    name: "Shadcn/ui",
+    description: "Beautifully designed components that you can copy and paste into your apps.",
+    url: "https://ui.shadcn.com/",
+    github: "https://github.com/shadcn-ui/ui",
+    tags: ["UI", "Components", "Tailwind"],
+  },
+  {
+    name: "Lucide Icons",
+    description: "Beautiful & consistent icon toolkit made by the community.",
+    url: "https://lucide.dev/",
+    github: "https://github.com/lucide-icons/lucide",
+    tags: ["Assets", "Icons", "Design"],
+  },
+
+  // AI Productivity & Jugad Tools
+  {
+    name: "Open WebUI",
+    description: "An extensible, feature-rich, and user-friendly self-hosted WebUI for LLMs.",
+    url: "https://openwebui.com/",
+    github: "https://github.com/open-webui/open-webui",
+    tags: ["Productivity", "WebUI", "Local AI"],
+  },
+  {
+    name: "AnythingLLM Desktop",
+    description: "Chat with your documents securely on your own device, entirely offline.",
+    url: "https://useanything.com/download",
+    github: "https://github.com/Mintplex-Labs/anything-llm",
+    tags: ["Productivity", "RAG", "Offline"],
+  },
 ];
 
 export default function OpenSourceClient() {
@@ -203,13 +288,13 @@ export default function OpenSourceClient() {
         >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 text-white text-sm font-semibold mb-6">
             <Crown weight="fill" className="text-amber-400" />
-            Hidden Gems
+            Hidden Gems & Resources
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-6">
-            Open Source <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Treasures</span>
+            Ultimate Resources <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Hub</span>
           </h1>
           <p className="text-lg text-slate-600 mb-8">
-            The best 100% free, open-source AI tools, frameworks, and models curated for developers and creators. No paywalls, just pure value.
+            The best 100% free, open-source AI tools, frameworks, guides, databases, and UI assets curated for developers and creators. No paywalls, just pure value.
           </p>
         </motion.div>
       </section>
