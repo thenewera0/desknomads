@@ -36,7 +36,10 @@ export default function OpenSourceClient() {
   return (
     <div className="min-h-screen w-full relative pt-32 md:pt-48 pb-32" style={{ backgroundColor: "var(--dn-bg)" }}>
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center mb-16 md:mb-24 z-10 pt-24 md:pt-32">
+      <section 
+        className="relative px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center mb-16 md:mb-24 z-10 pt-24 md:pt-32"
+        style={{ paddingTop: '160px' }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
