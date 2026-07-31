@@ -123,12 +123,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const articles = await getPublishedSlugs();
     articlePages = articles
       .filter((a) => a.slug)
-      .map((a) => ({
-        url: `${siteUrl}/${a.slug}`,
-        lastModified: new Date(a.updatedAt),
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
-      }));
+      .flatMap((a) => [
+        {
+          url: `${siteUrl}/${a.slug}`,
+          lastModified: new Date(a.updatedAt),
+          changeFrequency: "weekly" as const,
+          priority: 0.7,
+        },
+        {
+          url: `${siteUrl}/stories/${a.slug}`,
+          lastModified: new Date(a.updatedAt),
+          changeFrequency: "weekly" as const,
+          priority: 0.7,
+        },
+      ]);
   } catch (err) {
     console.error("Sitemap article fetch failed:", err);
   }
