@@ -24,8 +24,8 @@ function formatDate(iso: string | null): string {
 }
 
 export default async function StoriesPage() {
-  // Fetch top published articles dynamically (limit 16 to ensure 10+ stories)
-  const articles = await getPublishedArticlesWithCategory({ limit: 16 });
+  // Fetch top published articles dynamically (limit 36 for extensive story directory)
+  const articles = await getPublishedArticlesWithCategory({ limit: 36 });
 
   return (
     <div className="min-h-[calc(100vh-var(--dn-nav-height))] pt-28 md:pt-36 pb-24">
