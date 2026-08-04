@@ -118,6 +118,8 @@ interface ProviderReq {
   headers: Record<string, string>;
   useResponseFormat: boolean;
   retries: number;
+  /** Whole-call attempts, incl. transform (JSON) failures, before failing over. */
+  attempts: number;
 }
 
 /** One provider attempt. Throws on HTTP error, empty body, or missing content. */
@@ -163,11 +165,13 @@ function buildProviders(opts: ChatOptions): ProviderReq[] {
       url: LEVIATHAN.baseUrl,
       model: LEVIATHAN.model,
       headers: leviathanHeaders(),
-      // Leviathan routes across many free providers with varying json-mode
-      // support; rely on the prompt + loose parsing instead of response_format
-      // so a strict-field rejection doesn't force a fallback on every call.
       useResponseFormat: true,
       retries: 1,
+      // Leviathan routes across many free models; some occasionally emit a
+      // reasoning preamble instead of clean JSON. Give it several shots (a
+      // retry often re-routes to a JSON-clean model) before failing over —
+      // essential when the OpenRouter fallback is out of credits.
+      attempts: 4,
     });
   }
   if (getOpenRouterKeyOptional()) {
@@ -178,6 +182,7 @@ function buildProviders(opts: ChatOptions): ProviderReq[] {
       headers: openrouterHeaders(),
       useResponseFormat: true,
       retries: 2,
+      attempts: 1, // retrying a 402/credit error is pointless
     });
   }
   if (providers.length === 0) {
@@ -197,18 +202,24 @@ async function withFailover<R>(
   const providers = buildProviders(opts);
   let lastErr: unknown;
   for (const p of providers) {
-    try {
-      const raw = await callCompletion(p, messages, opts);
-      const out = transform(raw);
-      if (p.name === "leviathan") noteLeviathan(true);
-      return out;
-    } catch (err) {
-      lastErr = err;
-      if (p.name === "leviathan") {
-        noteLeviathan(false);
-        console.warn(
-          `[llm] Leviathan unavailable (${String((err as Error)?.message || err).slice(0, 140)}) — falling back to OpenRouter`
-        );
+    for (let attempt = 1; attempt <= p.attempts; attempt++) {
+      try {
+        const raw = await callCompletion(p, messages, opts);
+        const out = transform(raw); // JSON-parse failures throw here and retry
+        if (p.name === "leviathan") noteLeviathan(true);
+        return out;
+      } catch (err) {
+        lastErr = err;
+        const msg = String((err as Error)?.message || err).slice(0, 140);
+        if (attempt < p.attempts) {
+          console.warn(`[llm] ${p.name} attempt ${attempt}/${p.attempts} failed (${msg}) — retrying`);
+          continue;
+        }
+        // All attempts for this provider exhausted → move to next provider.
+        if (p.name === "leviathan") {
+          noteLeviathan(false);
+          console.warn(`[llm] Leviathan failed after ${p.attempts} attempts (${msg}) — falling back to OpenRouter`);
+        }
       }
     }
   }

@@ -312,6 +312,15 @@ export default function ToolsDirectoryPage() {
                 }}
                 className="group relative"
               >
+                {/* Whole-card click target → opens the tool's site. Keeps the
+                    "Visit site" cue below as a visual affordance. */}
+                <a
+                  href={tool.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Visit ${tool.name}`}
+                  className="absolute inset-0 z-20 rounded-[1.5rem]"
+                />
                 {/* Outer Shell */}
                 <div className="p-1.5 rounded-[1.5rem] bg-white/[0.02] border border-white/[0.06] transition-all duration-200 ease-[var(--dn-ease-out)] group-hover:border-white/[0.12] group-hover:bg-white/[0.04] h-full flex flex-col">
                   {/* Inner Core */}
@@ -393,15 +402,12 @@ export default function ToolsDirectoryPage() {
                           </span>
                         </div>
                       </div>
-                      <a
-                        href={tool.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <span
                         className="text-xs font-semibold text-[var(--dn-accent)] group-hover:text-white flex items-center gap-1 transition-colors duration-300"
                       >
                         Visit site
                         <ArrowUpRight size={12} weight="light" />
-                      </a>
+                      </span>
                     </div>
                   </div>
                 </div>
