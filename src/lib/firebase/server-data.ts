@@ -139,32 +139,46 @@ export async function getArticleCards(
 }
 
 /** Approved directory tools, featured first. */
+// Map a Firestore tool doc to a plain Tool (no Timestamps) for Server/Client Components.
+function docToTool(id: string, t: DocumentData): Tool {
+  return {
+    id,
+    name: t.name || "",
+    slug: t.slug || "",
+    description: t.description || "",
+    longDescription: t.longDescription || "",
+    url: t.url || "",
+    logoUrl: t.logoUrl || "",
+    screenshotUrl: t.screenshotUrl || "",
+    category: t.category || "AI Tools",
+    pricing: t.pricing || "freemium",
+    tags: t.tags || [],
+    rating: t.rating || 0,
+    isFeatured: !!t.isFeatured,
+    isVerified: !!t.isVerified,
+    status: t.status || "approved",
+    createdAt: tsToIso(t.createdAt) || "",
+  } as Tool;
+}
+
 export async function getApprovedTools(limit = 50): Promise<Tool[]> {
   const snap = await adminDb.collection("tools").where("status", "==", "approved").get();
-  // Map to plain objects (no Firestore Timestamps) for Client Components.
-  const tools = snap.docs.map((d) => {
-    const t = d.data();
-    return {
-      id: d.id,
-      name: t.name || "",
-      slug: t.slug || "",
-      description: t.description || "",
-      longDescription: t.longDescription || "",
-      url: t.url || "",
-      logoUrl: t.logoUrl || "",
-      screenshotUrl: t.screenshotUrl || "",
-      category: t.category || "AI Tools",
-      pricing: t.pricing || "freemium",
-      tags: t.tags || [],
-      rating: t.rating || 0,
-      isFeatured: !!t.isFeatured,
-      isVerified: !!t.isVerified,
-      status: t.status || "approved",
-      createdAt: tsToIso(t.createdAt) || "",
-    } as Tool;
-  });
+  const tools = snap.docs.map((d) => docToTool(d.id, d.data()));
   tools.sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured) || (b.rating || 0) - (a.rating || 0));
   return tools.slice(0, limit);
+}
+
+/** A single approved tool by slug (for the tool detail page). */
+export async function getToolBySlug(slug: string): Promise<Tool | null> {
+  const snap = await adminDb.collection("tools").where("slug", "==", slug).limit(2).get();
+  const match = snap.docs.find((d) => (d.data().status || "approved") === "approved");
+  return match ? docToTool(match.id, match.data()) : null;
+}
+
+/** Slugs of all approved tools (for the sitemap). */
+export async function getToolSlugs(): Promise<string[]> {
+  const snap = await adminDb.collection("tools").where("status", "==", "approved").get();
+  return snap.docs.map((d) => (d.data().slug as string) || "").filter(Boolean);
 }
 
 export async function getAuthorBySlugServer(slug: string): Promise<Author | null> {

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getPublishedSlugs } from "@/lib/firebase/server-data";
+import { getPublishedSlugs, getToolSlugs } from "@/lib/firebase/server-data";
 
 export const revalidate = 3600;
 
@@ -141,5 +141,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Sitemap article fetch failed:", err);
   }
 
-  return [...staticPages, ...categoryPages, ...articlePages];
+  // Dynamic tool detail URLs from Firestore.
+  let toolPages: MetadataRoute.Sitemap = [];
+  try {
+    const slugs = await getToolSlugs();
+    toolPages = slugs.map((slug) => ({
+      url: `${siteUrl}/tools/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }));
+  } catch (err) {
+    console.error("Sitemap tool fetch failed:", err);
+  }
+
+  return [...staticPages, ...categoryPages, ...articlePages, ...toolPages];
 }
