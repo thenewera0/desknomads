@@ -235,7 +235,7 @@ export default async function CategoryPage({
     "@type": "CollectionPage",
     name: category.name,
     description: category.description,
-    url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com"}/category/${slug}`,
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store"}/category/${slug}`,
   };
 
   return (

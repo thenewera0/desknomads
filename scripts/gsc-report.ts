@@ -6,7 +6,7 @@ import { JWT } from "google-auth-library";
 import { getGscCredentials, getGscSiteUrl } from "@/lib/ai/config";
 import { adminDb } from "@/lib/firebase/admin";
 
-const site = getGscSiteUrl(); // sc-domain:desknomads.shop
+const site = getGscSiteUrl(); // sc-domain:desknomads.store
 const { clientEmail, privateKey } = getGscCredentials();
 const client = new JWT({
   email: clientEmail,
@@ -67,7 +67,7 @@ async function main() {
   const snap = await adminDb.collection("articles").where("status", "==", "published").limit(8).get();
   console.log(`\n=== index status (URL Inspection) — sample of ${snap.size} articles ===`);
   for (const d of snap.docs) {
-    const url = `https://www.desknomads.shop/${d.data().slug}`;
+    const url = `https://www.desknomads.store/${d.data().slug}`;
     console.log(`  ${await inspect(url)}\n    ${url}`);
   }
   process.exit(0);

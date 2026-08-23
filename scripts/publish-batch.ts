@@ -35,7 +35,7 @@ async function main() {
 
   const pub = results.filter((r) => r.status === "published").length;
   console.log(`\n=== Done: ${pub} published, ${results.length - pub} to review, ${eligible.length - results.length} failed ===`);
-  results.forEach((r) => console.log(`  [${r.status}] ${r.wordCount}w SEO${r.seoScore}  https://www.desknomads.shop/${r.slug}`));
+  results.forEach((r) => console.log(`  [${r.status}] ${r.wordCount}w SEO${r.seoScore}  https://www.desknomads.store/${r.slug}`));
   process.exit(0);
 }
 main().catch((e) => { console.error("FATAL:", e); process.exit(1); });

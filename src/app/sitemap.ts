@@ -4,7 +4,7 @@ import { getPublishedSlugs, getToolSlugs } from "@/lib/firebase/server-data";
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [

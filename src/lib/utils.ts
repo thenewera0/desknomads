@@ -59,6 +59,6 @@ export function generateId(): string {
 }
 
 export function absoluteUrl(path: string): string {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }

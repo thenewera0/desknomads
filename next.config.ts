@@ -32,7 +32,19 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "desknomads.store",
+      },
+      {
+        protocol: "https",
+        hostname: "www.desknomads.store",
+      },
+      {
+        protocol: "https",
         hostname: "desknomads.shop",
+      },
+      {
+        protocol: "https",
+        hostname: "www.desknomads.shop",
       },
       {
         protocol: "https",

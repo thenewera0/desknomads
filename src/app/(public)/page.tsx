@@ -25,14 +25,14 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "DeskNomads",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store",
   description:
     "Discover the best AI tools, remote work opportunities, automation systems, and online income strategies.",
   potentialAction: {
     "@type": "SearchAction",
     target: {
       "@type": "EntryPoint",
-      urlTemplate: `${process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com"}/search?q={search_term_string}`,
+      urlTemplate: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store"}/search?q={search_term_string}`,
     },
     "query-input": "required name=search_term_string",
   },
@@ -42,8 +42,8 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "DeskNomads",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com",
-  logo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com"}/logo.png`,
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store",
+  logo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store"}/logo.png`,
   sameAs: [
     "https://twitter.com/desknomads",
     "https://linkedin.com/company/desknomads",

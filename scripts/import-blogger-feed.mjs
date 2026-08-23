@@ -12,7 +12,7 @@ const app = getApps()[0] || initializeApp({
 });
 const db = getFirestore(app);
 const PUB = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "pub-1562600430581360";
-const FEED = "https://www.desknomads.shop/feeds/posts/default?alt=json&max-results=500";
+const FEED = process.env.BLOGGER_FEED_URL || "https://desknomads.store/feeds/posts/default?alt=json&max-results=500";
 const AUTHOR_ID = "desknomads-team";
 
 // ── helpers ──────────────────────────────────────────────────────
@@ -91,7 +91,7 @@ async function ensureAuthor() {
     await ref.set({
       name: "DeskNomads Editorial", slug: "desknomads-editorial",
       bio: "The DeskNomads editorial team covers AI tools, remote work, and digital income.",
-      avatarUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.shop"}/logo.png`,
+      avatarUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store"}/logo.png`,
       socialLinks: { twitter: "https://twitter.com/desknomads" }, role: "admin",
       createdAt: FieldValue.serverTimestamp(),
     });
@@ -144,7 +144,7 @@ for (const e of entries) {
     scheduledAt: null,
     readingTime, wordCount,
     seoTitle: title, seoDescription: excerpt,
-    canonicalUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.shop"}/${slug}`,
+    canonicalUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store"}/${slug}`,
     ogImage: featuredImage,
     tags: labels.slice(0, 12), faqs: [], toc, internalLinks: [],
     seoScore: 0, readabilityScore: 0, views: 0,

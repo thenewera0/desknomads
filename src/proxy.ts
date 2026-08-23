@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { bloggerRedirects } from "@/lib/blogger-redirects";
 
 /**
- * Blogger → DeskNomads migration redirect system.
+ * Blogger & Legacy Domain → DeskNomads Migration Redirect System.
  *
- * Permanently (301) maps every legacy Blogger URL shape to its new page so
- * search rankings and backlinks transfer to desknomads.shop:
+ * Permanently (301) maps every legacy URL shape and old domain so
+ * search rankings and backlinks transfer to desknomads.store:
+ *   - old domain (desknomads.shop / www.desknomads.shop → www.desknomads.store)
+ *   - apex canonicalization (desknomads.store → www.desknomads.store)
  *   - exact post map (generated from imported articles)
  *   - dated post fallback   /YYYY/MM/slug.html → /slug
  *   - static pages          /p/name.html       → /name (or mapped)
@@ -14,7 +16,7 @@ import { bloggerRedirects } from "@/lib/blogger-redirects";
  *   - feeds                 /feeds/...          → /feed.xml
  *   - any leftover .html, Blogger ?m=1 mobile param, trailing slashes
  *
- * Note: this runs on the new site (desknomads.shop). Redirecting the
+ * Note: this runs on the new site (desknomads.store). Redirecting the
  * desknomads.blogspot.com host itself is a Blogger-level setting — see DEPLOY.md.
  */
 
@@ -62,14 +64,20 @@ export async function proxy(request: NextRequest) {
   const to = (target: string, code: 301 | 308 = 301) =>
     NextResponse.redirect(new URL(target, request.url), code);
 
-  // -1. Canonical host: send the bare apex → www for PAGES only. Static files
-  // (ads.txt, robots.txt, sitemap.xml, feed.xml) are excluded by the matcher, so
-  // they serve directly on the apex — letting AdSense fetch desknomads.shop/ads.txt
+  // -1. Canonical host: send legacy domain and bare apex → www.desknomads.store for PAGES only.
+  // Static files (ads.txt, robots.txt, sitemap.xml, feed.xml) are excluded by the matcher, so
+  // they serve directly on the apex — letting AdSense fetch desknomads.store/ads.txt
   // with a 200 instead of a redirect.
-  const host = request.headers.get("host") || request.nextUrl.host;
-  if (host === "desknomads.shop") {
+  const host = (request.headers.get("host") || request.nextUrl.host).toLowerCase();
+  if (host.includes("desknomads.shop")) {
     return NextResponse.redirect(
-      new URL(pathname + request.nextUrl.search, "https://www.desknomads.shop"),
+      new URL(pathname + request.nextUrl.search, "https://www.desknomads.store"),
+      301
+    );
+  }
+  if (host === "desknomads.store") {
+    return NextResponse.redirect(
+      new URL(pathname + request.nextUrl.search, "https://www.desknomads.store"),
       301
     );
   }

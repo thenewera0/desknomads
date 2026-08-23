@@ -67,7 +67,7 @@ export function slugifyCategory(name: string): string {
 // ─── Site / brand ───────────────────────────────────────────────
 export const SITE = {
   name: process.env.NEXT_PUBLIC_SITE_NAME || "DeskNomads",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store",
   adsensePublisherId: process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "pub-1562600430581360",
   defaultAuthorId: "desknomads-team",
 };
@@ -112,11 +112,11 @@ export function getCronSecret(): string | undefined {
 
 /**
  * Google Search Console property URL. Use the exact form verified in GSC:
- *  - URL-prefix property: "https://desknomads.com/"
- *  - Domain property:     "sc-domain:desknomads.com"
+ *  - URL-prefix property: "https://www.desknomads.store/"
+ *  - Domain property:     "sc-domain:desknomads.store"
  */
 export function getGscSiteUrl(): string {
-  return process.env.GSC_SITE_URL || `${SITE.url}/`;
+  return process.env.GSC_SITE_URL || "sc-domain:desknomads.store";
 }
 
 /**

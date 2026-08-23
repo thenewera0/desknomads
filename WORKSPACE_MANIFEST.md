@@ -31,8 +31,8 @@
 
 ## 5. UPGRADE LOG & FUTURE TODOS
 - **Recent Upgrades:**
-  - Full migration from Blogger (`desknomads.blogspot.com`) to Vercel (`desknomads.shop`), complete with a dedicated middleware (`src/proxy.ts`) to preserve SEO rankings via 301 redirects.
-  - Implemented the autonomous AI content engine powered by OpenRouter and Tavily.
+  - Full migration from Blogger (`desknomads.blogspot.com`) to Vercel (`desknomads.store`), complete with a dedicated middleware (`src/proxy.ts`) to preserve SEO rankings via 301 redirects.
+  - Implemented the autonomous AI content engine powered by OpenRouter, Leviathan, and Tavily.
 - **Future Todos & Refactoring:**
   - **AdSense Approval:** Wait for Google AdSense site approval and configure the ad slots.
   - **SEO Monitoring:** Monitor the transition in Google Search Console, ensuring the new `sitemap.xml` gets indexed properly.

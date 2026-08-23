@@ -25,13 +25,13 @@ template.
 2. Framework preset: **Next.js** (auto-detected). Root directory: repo root.
 3. **Environment Variables** — add everything from `.env.local`:
    - `NEXT_PUBLIC_FIREBASE_*` (7), `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`
-   - `NEXT_PUBLIC_SITE_URL=https://www.desknomads.shop`, `NEXT_PUBLIC_SITE_NAME=DeskNomads`
+   - `NEXT_PUBLIC_SITE_URL=https://www.desknomads.store`, `NEXT_PUBLIC_SITE_NAME=DeskNomads`
    - `NEXT_PUBLIC_ADSENSE_PUBLISHER_ID`, `NEXT_PUBLIC_ADSENSE_SLOT` (when you have it)
    - `OPENROUTER_API_KEY`, `TAVILY_API_KEY`, `CRON_SECRET`
-   - `GSC_SITE_URL`, `GSC_CLIENT_EMAIL` (optional)
+   - `GSC_SITE_URL=sc-domain:desknomads.store`, `GSC_CLIENT_EMAIL` (optional)
    - For `FIREBASE_PRIVATE_KEY`, paste the value **with `\n` sequences** (as in `.env.local`).
 4. **Deploy.**
-5. **Domain:** Project → Settings → Domains → add `desknomads.shop` and `www.desknomads.shop`, and update DNS at your registrar as Vercel instructs. *(This moves the domain off Blogger onto the new site — your old `/YYYY/MM/slug.html` URLs auto-301 to the new slugs.)*
+5. **Domain:** Project → Settings → Domains → add `desknomads.store` and `www.desknomads.store`, and update DNS at your registrar (GoDaddy) as Vercel instructs. *(Old URLs from Blogger and `.shop` auto-301 to the new `.store` slugs.)*
 
 > The content engine does **not** run on Vercel (article generation exceeds
 > Hobby's 60s function limit). It runs in GitHub Actions — see below.
@@ -44,12 +44,12 @@ template.
 4. Auto-publish is already enabled (`settings/engine.autoPublishEnabled = true`).
 
 ## 4. Post-deploy checklist
-- [ ] Site loads at `https://www.desknomads.shop` with articles + tools.
-- [ ] Old Blogger URL redirects (e.g. `/2026/05/…html` → `/…`).
+- [ ] Site loads at `https://www.desknomads.store` with articles + tools.
+- [ ] Old Blogger and `.shop` URLs redirect seamlessly (301) to `https://www.desknomads.store/…`.
 - [ ] Admin login works at `/admin/login` (enable Email/Password in Firebase Auth).
-- [ ] `https://www.desknomads.shop/ads.txt` returns the publisher line.
-- [ ] Submit `https://www.desknomads.shop/sitemap.xml` in Google Search Console.
-- [ ] AdSense: add the site in AdSense + get it approved (ads stay blank until then).
+- [ ] `https://www.desknomads.store/ads.txt` returns the publisher line.
+- [ ] Submit `https://www.desknomads.store/sitemap.xml` in Google Search Console.
+- [ ] AdSense: add `desknomads.store` in AdSense + request site review.
 - [ ] Run the **Publish** workflow once manually to confirm the engine end-to-end.
 
 ## Blogger migration & redirects (SEO preservation)
@@ -67,24 +67,24 @@ All legacy Blogger URLs are 301-redirected to the new pages by the middleware
 
 The exact post map is generated from the imported articles:
 `node --env-file=.env.local scripts/build-blogger-redirects.mjs` → `src/lib/blogger-redirects.ts`
-(re-run it whenever you re-import). These all run on **desknomads.shop**.
+(re-run it whenever you re-import). These all run on **desknomads.store**.
 
-### Redirecting `desknomads.blogspot.com` → `desknomads.shop`
+### Redirecting `desknomads.blogspot.com` → `desknomads.store`
 The `.blogspot.com` host is served by Google, so our app can't 301 it directly.
-After you move `desknomads.shop` off Blogger onto Vercel, add this to the Blogger
+After you move `desknomads.store` onto Vercel, add this to the Blogger
 theme (**Blogger → Theme → Edit HTML**, immediately after `<head>`):
 
 ```html
 <script>/*<![CDATA[*/
 (function(){
   if (location.hostname.indexOf("blogspot.com") > -1) {
-    location.replace("https://www.desknomads.shop" + location.pathname + location.search + location.hash);
+    location.replace("https://www.desknomads.store" + location.pathname + location.search + location.hash);
   }
 })();
 /*]]>*/</script>
 ```
 
-This forwards every `blogspot.com` visit to the same path on `desknomads.shop`,
+This forwards every `blogspot.com` visit to the same path on `desknomads.store`,
 where the middleware finishes the 301 to the correct new page. (Keep the Blogger
 blog published so the redirect script keeps serving.)
 

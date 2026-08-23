@@ -25,7 +25,7 @@ export async function GET(
     return new NextResponse("Story Not Found", { status: 404 });
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.shop";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
   const canonicalUrl = article.canonicalUrl || `${siteUrl}/${article.slug}`;
   const storyUrl = `${siteUrl}/stories/${article.slug}`;
   const publisherLogo = `${siteUrl}/logo.png`;

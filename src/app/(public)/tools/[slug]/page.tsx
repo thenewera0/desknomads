@@ -16,7 +16,7 @@ import type { Tool } from "@/types";
 
 export const revalidate = 3600;
 
-const siteUrl = () => process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.shop";
+const siteUrl = () => process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
 
 export async function generateMetadata({
   params,

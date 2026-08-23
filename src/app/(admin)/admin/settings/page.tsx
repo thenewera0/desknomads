@@ -7,7 +7,7 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [settings, setSettings] = useState({
     siteName: "DeskNomads",
-    siteUrl: "https://desknomads.com",
+    siteUrl: "https://www.desknomads.store",
     tagline: "Smart Tools. Remote Freedom. Future Income.",
     adsenseId: "",
     gscVerification: "",

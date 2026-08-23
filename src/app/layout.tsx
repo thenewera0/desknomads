@@ -26,7 +26,7 @@ const serif = Newsreader({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://desknomads.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store"),
   title: {
     default: "DeskNomads — AI Tools, Remote Jobs & Passive Income",
     template: "%s | DeskNomads",

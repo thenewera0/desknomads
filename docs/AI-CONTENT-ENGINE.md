@@ -85,8 +85,8 @@ collection. Visible in the admin panel ("Performance — Search Console") and vi
 **Sync Search Console**; also runs daily by cron.
 
 Setup:
-1. Set `GSC_SITE_URL` to the exact verified property (URL-prefix `https://desknomads.com/`
-   or domain `sc-domain:desknomads.com`).
+1. Set `GSC_SITE_URL` to the exact verified property (URL-prefix `https://www.desknomads.store/`
+   or domain `sc-domain:desknomads.store`).
 2. Enable the **Google Search Console API** in the Cloud project.
 3. In Search Console → Settings → **Users and permissions**, add the service-account
    email (`FIREBASE_CLIENT_EMAIL`, or a dedicated `GSC_CLIENT_EMAIL`) as a user.

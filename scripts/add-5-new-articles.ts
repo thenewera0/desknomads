@@ -793,7 +793,7 @@ async function seedNewArticles() {
       wordCount: wordCount,
       seoTitle: article.seoTitle,
       seoDescription: article.seoDescription,
-      canonicalUrl: `https://www.desknomads.shop/${slug}`,
+      canonicalUrl: `https://www.desknomads.store/${slug}`,
       ogImage: article.featuredImage,
       tags: article.tags,
       faqs: article.faqs,

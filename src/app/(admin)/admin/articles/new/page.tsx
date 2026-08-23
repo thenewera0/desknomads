@@ -191,7 +191,7 @@ export default function NewArticlePage() {
 
             {/* Slug */}
             <div className="flex items-center gap-2 mb-6 text-[12px] text-[var(--dn-text-muted)]">
-              <span>desknomads.com/</span>
+              <span>desknomads.store/</span>
               <input
                 type="text"
                 value={form.slug}
@@ -496,7 +496,7 @@ The full Tiptap rich-text editor will be integrated for the production build."
                       {form.seoTitle || form.title || "Article Title"}
                     </p>
                     <p className="text-[11px] text-[#bdc1c6] mt-0.5 truncate">
-                      desknomads.com › {form.slug || "article-slug"}
+                      desknomads.store › {form.slug || "article-slug"}
                     </p>
                     <p className="text-[11px] text-[#9aa0a6] mt-1 line-clamp-2">
                       {form.seoDescription || form.excerpt || "Meta description will appear here..."}

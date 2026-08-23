@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Clock, Eye, Globe, EnvelopeSimple } from "@phosphor-icons/react/dist/ssr";
 import { getAuthorBySlugServer, getArticleCardsByAuthor } from "@/lib/firebase/server-data";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.shop";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
 
 interface AuthorView {
   id: string;
