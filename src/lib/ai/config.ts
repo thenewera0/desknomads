@@ -91,7 +91,7 @@ export function getLeviathanKey(): string | undefined {
 // ─── Gemini Direct (Google AI Studio failover) ──────────────────
 export const GEMINI = {
   baseUrl: "https://generativelanguage.googleapis.com/v1beta/openai",
-  model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+  model: process.env.GEMINI_MODEL || "gemini-3.5-flash-lite",
 };
 
 export function getGeminiKeyOptional(): string | undefined {

@@ -267,35 +267,33 @@ function topicTokens(s: string): Set<string> {
   );
 }
 
-/** Overlap coefficient of distinctive tokens: 1.0 = same core topic. */
+/** Jaccard similarity of distinctive tokens (0.0 - 1.0). */
 function topicOverlap(a: string, b: string): number {
   const A = topicTokens(a);
   const B = topicTokens(b);
   if (!A.size || !B.size) return 0;
   let inter = 0;
   for (const t of A) if (B.has(t)) inter++;
-  return inter / Math.min(A.size, B.size);
+  const union = A.size + B.size - inter;
+  return union > 0 ? inter / union : 0;
 }
 
 /**
  * Drop candidates that substantially overlap an already-published article OR an
- * earlier candidate in the same batch. Compares the distinctive tokens of the
- * title + primary keyword, so two "Superset IDE" or "automate your job" ideas
- * collapse to one even when the surrounding wording differs.
+ * earlier candidate in the same batch.
  */
 function dedupeCandidates(
   candidates: CandidateOpportunity[],
   existingTitles: string[],
-  threshold = 0.5
+  threshold = 0.65
 ): CandidateOpportunity[] {
   const kept: string[] = [...existingTitles];
   const out: CandidateOpportunity[] = [];
   for (const c of candidates) {
-    const fingerprint = `${c.title} ${c.primaryKeyword || ""}`;
-    const dup = kept.some((prev) => topicOverlap(fingerprint, prev) >= threshold);
+    const dup = kept.some((prev) => topicOverlap(c.title, prev) >= threshold);
     if (dup) continue;
     out.push(c);
-    kept.push(fingerprint);
+    kept.push(c.title);
   }
   return out;
 }

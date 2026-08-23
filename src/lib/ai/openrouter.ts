@@ -93,8 +93,8 @@ function geminiHeaders() {
 
 // ── Circuit breaker for the primary provider ────────────────────
 const breaker = { fails: 0, openUntil: 0 };
-const BREAKER_THRESHOLD = 2;
-const BREAKER_COOLDOWN_MS = 60_000;
+const BREAKER_THRESHOLD = 1;
+const BREAKER_COOLDOWN_MS = 300_000; // 5 minutes
 
 function leviathanAvailable(): boolean {
   if (!LEVIATHAN.enabled || !getLeviathanKey()) return false;
@@ -169,8 +169,8 @@ function buildProviders(opts: ChatOptions): ProviderReq[] {
       model: LEVIATHAN.model,
       headers: leviathanHeaders(),
       useResponseFormat: true,
-      retries: 1,
-      attempts: 4,
+      retries: 0,
+      attempts: 2,
     });
   }
   if (getOpenRouterKeyOptional()) {
