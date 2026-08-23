@@ -88,6 +88,16 @@ export function getLeviathanKey(): string | undefined {
   return process.env.LEVIATHAN_API_KEY || undefined;
 }
 
+// ─── Gemini Direct (Google AI Studio failover) ──────────────────
+export const GEMINI = {
+  baseUrl: "https://generativelanguage.googleapis.com/v1beta/openai",
+  model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+};
+
+export function getGeminiKeyOptional(): string | undefined {
+  return process.env.GEMINI_API_KEY || undefined;
+}
+
 // ─── Env accessors ──────────────────────────────────────────────
 export function getOpenRouterKey(): string {
   const key = process.env.OPENROUTER_API_KEY;

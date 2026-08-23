@@ -12,9 +12,11 @@ import {
   MODELS,
   SITE,
   LEVIATHAN,
+  GEMINI,
   getLeviathanKey,
   getOpenRouterKey,
   getOpenRouterKeyOptional,
+  getGeminiKeyOptional,
   EngineError,
   EngineConfigError,
 } from "./config";
@@ -75,8 +77,6 @@ function openrouterHeaders() {
 
 function leviathanHeaders() {
   const key = getLeviathanKey() as string;
-  // Send both auth styles the gateway documents (Bearer for the OpenAI SDK,
-  // X-API-Key for the raw fetch example).
   return {
     Authorization: `Bearer ${key}`,
     "X-API-Key": key,
@@ -84,10 +84,14 @@ function leviathanHeaders() {
   };
 }
 
+function geminiHeaders() {
+  return {
+    Authorization: `Bearer ${getGeminiKeyOptional()}`,
+    "Content-Type": "application/json",
+  };
+}
+
 // ── Circuit breaker for the primary provider ────────────────────
-// Short-lived serverless/CLI runs make ~10 LLM calls each. If Leviathan is
-// unhealthy, this stops us paying a failed round-trip on every one: after a
-// couple of consecutive failures it's skipped for a cooldown, then retried.
 const breaker = { fails: 0, openUntil: 0 };
 const BREAKER_THRESHOLD = 2;
 const BREAKER_COOLDOWN_MS = 60_000;
@@ -112,7 +116,7 @@ function noteLeviathan(ok: boolean): void {
 }
 
 interface ProviderReq {
-  name: "leviathan" | "openrouter";
+  name: "leviathan" | "openrouter" | "gemini";
   url: string;
   model: string;
   headers: Record<string, string>;
@@ -149,14 +153,13 @@ async function callCompletion(
 
   const data = await res.json().catch(() => null);
   const content: string | undefined = data?.choices?.[0]?.message?.content;
-  // Note: covers a gateway that answers HTTP 200 with an empty/JSON-less body.
   if (!content || !content.trim()) {
     throw new EngineError(`${p.name}.chat`, "Empty completion response");
   }
   return content;
 }
 
-/** Ordered provider list: Leviathan (if healthy) then OpenRouter fallback. */
+/** Ordered provider list: Leviathan (primary) -> OpenRouter (fallback) -> Gemini Direct (failover). */
 function buildProviders(opts: ChatOptions): ProviderReq[] {
   const providers: ProviderReq[] = [];
   if (leviathanAvailable()) {
@@ -167,10 +170,6 @@ function buildProviders(opts: ChatOptions): ProviderReq[] {
       headers: leviathanHeaders(),
       useResponseFormat: true,
       retries: 1,
-      // Leviathan routes across many free models; some occasionally emit a
-      // reasoning preamble instead of clean JSON. Give it several shots (a
-      // retry often re-routes to a JSON-clean model) before failing over —
-      // essential when the OpenRouter fallback is out of credits.
       attempts: 4,
     });
   }
@@ -182,12 +181,23 @@ function buildProviders(opts: ChatOptions): ProviderReq[] {
       headers: openrouterHeaders(),
       useResponseFormat: true,
       retries: 2,
-      attempts: 1, // retrying a 402/credit error is pointless
+      attempts: 1, // 402 is credit failure; fail over fast
+    });
+  }
+  if (getGeminiKeyOptional()) {
+    providers.push({
+      name: "gemini",
+      url: GEMINI.baseUrl,
+      model: GEMINI.model,
+      headers: geminiHeaders(),
+      useResponseFormat: true,
+      retries: 2,
+      attempts: 2,
     });
   }
   if (providers.length === 0) {
     throw new EngineConfigError(
-      "No LLM provider configured (set LEVIATHAN_API_KEY or OPENROUTER_API_KEY)"
+      "No LLM provider configured (set LEVIATHAN_API_KEY, OPENROUTER_API_KEY, or GEMINI_API_KEY)"
     );
   }
   return providers;
