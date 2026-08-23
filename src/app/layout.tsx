@@ -99,7 +99,7 @@ export default function RootLayout({
         {/* Google Adsense */}
         <script
           async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-${process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID}`}
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-${process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "pub-1562600430581360"}`}
           crossOrigin="anonymous"
         />
         {/* Microsoft Clarity — add project ID when available */}
