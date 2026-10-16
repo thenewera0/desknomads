@@ -1,10 +1,11 @@
 // RSS Feed route — /feed.xml (published articles from Firestore)
 import { getPublishedArticles } from "@/lib/firebase/server-data";
+import { getSiteUrl } from "@/lib/utils";
 
 export const revalidate = 3600;
 
 export async function GET() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
+  const siteUrl = getSiteUrl();
 
   let articles: {
     title: string;

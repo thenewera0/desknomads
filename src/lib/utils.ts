@@ -58,7 +58,16 @@ export function generateId(): string {
   return crypto.randomUUID();
 }
 
+export function getSiteUrl(): string {
+  const base = process.env.NEXT_PUBLIC_SITE_URL;
+  if (!base || base.includes("desknomads.shop") || base.includes("desknomads.com")) {
+    return "https://www.desknomads.store";
+  }
+  return base.replace(/\/$/, "");
+}
+
 export function absoluteUrl(path: string): string {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
+  const base = getSiteUrl();
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
+

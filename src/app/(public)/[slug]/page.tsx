@@ -20,6 +20,7 @@ const TableOfContents = dynamic(() => import("@/components/articles/TableOfConte
 const NewsletterInline = dynamic(() => import("@/components/articles/NewsletterInline"));
 import type { Article, FAQ, TOCItem } from "@/types";
 import { getPublishedArticleBySlug, getArticleCards, isIndexable } from "@/lib/firebase/server-data";
+import { getSiteUrl } from "@/lib/utils";
 
 // Revalidate article pages periodically so freshly published content appears.
 export const revalidate = 300;
@@ -158,24 +159,28 @@ export async function generateMetadata({
   const article = await getArticleBySlug(slug);
   if (!article) return { title: "Article Not Found" };
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
+  const siteUrl = getSiteUrl();
 
   // Thin stubs stay live (redirect targets still resolve) but are not indexed,
   // so they don't count against the site's overall quality signal.
   const thin = !isIndexable(article);
+  const canonicalUrl =
+    article.canonicalUrl && !article.canonicalUrl.includes("desknomads.shop")
+      ? article.canonicalUrl
+      : `${siteUrl}/${article.slug}`;
 
   return {
     title: article.seoTitle || article.title,
     description: article.seoDescription || article.excerpt,
     ...(thin ? { robots: { index: false, follow: true } } : {}),
     alternates: {
-      canonical: article.canonicalUrl || `${siteUrl}/${article.slug}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
       type: "article",
       title: article.seoTitle || article.title,
       description: article.seoDescription || article.excerpt,
-      url: `${siteUrl}/${article.slug}`,
+      url: canonicalUrl,
       images: [
         {
           url: article.ogImage || article.featuredImage,
@@ -200,7 +205,7 @@ export async function generateMetadata({
 }
 
 function generateArticleSchema(article: Article) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
+  const siteUrl = getSiteUrl();
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -251,7 +256,7 @@ function generateFAQSchema(faqs: FAQ[]) {
 }
 
 function generateBreadcrumbSchema(article: Article) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
+  const siteUrl = getSiteUrl();
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -280,7 +285,7 @@ function generateBreadcrumbSchema(article: Article) {
 
 function generateSoftwareSchema(article: Article) {
   if (article.category?.slug !== "ai-tools") return null;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
+  const siteUrl = getSiteUrl();
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -301,7 +306,7 @@ function generateSoftwareSchema(article: Article) {
 function generateHowToSchema(article: Article) {
   const isHowTo = article.title.toLowerCase().startsWith("how to") || article.tags.some(t => t.toLowerCase() === "how-to");
   if (!isHowTo) return null;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
+  const siteUrl = getSiteUrl();
   return {
     "@context": "https://schema.org",
     "@type": "HowTo",
@@ -363,7 +368,7 @@ export default async function ArticlePage({
       })
     : "";
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store";
+  const siteUrl = getSiteUrl();
   const articleUrl = `${siteUrl}/${article.slug}`;
 
   return (

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono, Newsreader } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { getSiteUrl } from "@/lib/utils";
 import "./globals.css";
 
 const GA_ID = process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID; // G-NEK7FYPZT6
@@ -26,7 +27,7 @@ const serif = Newsreader({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.desknomads.store"),
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "DeskNomads — AI Tools, Remote Jobs & Passive Income",
     template: "%s | DeskNomads",

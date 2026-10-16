@@ -20,11 +20,18 @@ async function main() {
   });
 
   console.log("\n=== 4. RECENT PUBLISHED ARTICLES (Last 10) ===");
-  const articlesSnap = await adminDb.collection("articles").where("status", "==", "published").orderBy("publishedAt", "desc").limit(10).get();
-  articlesSnap.docs.forEach(d => {
-    const data = d.data();
+  const articlesSnap = await adminDb.collection("articles").where("status", "==", "published").get();
+  const sortedArticles = articlesSnap.docs
+    .map(d => d.data())
+    .sort((a, b) => {
+      const da = a.publishedAt?.toDate ? a.publishedAt.toDate().getTime() : new Date(a.publishedAt || 0).getTime();
+      const db = b.publishedAt?.toDate ? b.publishedAt.toDate().getTime() : new Date(b.publishedAt || 0).getTime();
+      return db - da;
+    })
+    .slice(0, 10);
+  sortedArticles.forEach(data => {
     const pub = data.publishedAt?.toDate?.()?.toISOString() || data.publishedAt || "no-date";
-    console.log(`  [${pub}] ${data.title} (/ ${data.slug})`);
+    console.log(`  [${pub}] ${data.title} (/ ${data.slug}) [views: ${data.views || 0}]`);
   });
 
   process.exit(0);
