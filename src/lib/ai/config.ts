@@ -126,7 +126,11 @@ export function getCronSecret(): string | undefined {
  *  - Domain property:     "sc-domain:desknomads.store"
  */
 export function getGscSiteUrl(): string {
-  return process.env.GSC_SITE_URL || "sc-domain:desknomads.store";
+  const url = process.env.GSC_SITE_URL;
+  if (!url || url.includes("desknomads.shop") || url.includes("desknomads.com")) {
+    return "sc-domain:desknomads.store";
+  }
+  return url;
 }
 
 /**
