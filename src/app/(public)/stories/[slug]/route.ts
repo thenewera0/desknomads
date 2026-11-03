@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getPublishedArticleBySlug } from "@/lib/firebase/server-data";
 
+export const dynamic = "force-dynamic";
+
 function escapeXml(str: string): string {
   return (str || "")
     .replace(/&/g, "&amp;")
@@ -19,7 +21,13 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const article = await getPublishedArticleBySlug(slug);
+  let article = null;
+  try {
+    article = await getPublishedArticleBySlug(slug);
+  } catch (err) {
+    console.error(`Failed to fetch story for slug ${slug}:`, err);
+    return new NextResponse("Service Unavailable", { status: 503 });
+  }
 
   if (!article) {
     return new NextResponse("Story Not Found", { status: 404 });
