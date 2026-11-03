@@ -44,6 +44,7 @@ import {
   getSlugToArticleMap,
   savePerformanceMetrics,
 } from "./store";
+import { submitToIndexNow } from "../seo/indexnow";
 import type { ContentOpportunity, PerformanceMetrics } from "@/types";
 
 async function log(
@@ -298,8 +299,14 @@ export async function runDailyPublish(): Promise<{
   for (const opp of eligible) {
     try {
       const res = await generateArticleFromOpportunity(opp, { autoPublish: true });
-      if (res.status === "published") published++;
-      else review++;
+      if (res.status === "published") {
+        published++;
+        if (res.slug) {
+          submitToIndexNow([`https://www.desknomads.store/${res.slug}`]).catch(() => {});
+        }
+      } else {
+        review++;
+      }
     } catch {
       failed++;
       // Continue to next article — one failure must not block the run.

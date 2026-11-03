@@ -118,26 +118,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  // Dynamic article URLs from Firestore.
+  // Dynamic article URLs from Firestore (canonical URLs only — web stories live in dedicated sitemap).
   let articlePages: MetadataRoute.Sitemap = [];
   try {
     const articles = await getPublishedSlugs();
     articlePages = articles
       .filter((a) => a.slug)
-      .flatMap((a) => [
-        {
-          url: `${siteUrl}/${a.slug}`,
-          lastModified: new Date(a.updatedAt),
-          changeFrequency: "weekly" as const,
-          priority: 0.7,
-        },
-        {
-          url: `${siteUrl}/stories/${a.slug}`,
-          lastModified: new Date(a.updatedAt),
-          changeFrequency: "weekly" as const,
-          priority: 0.7,
-        },
-      ]);
+      .map((a) => ({
+        url: `${siteUrl}/${a.slug}`,
+        lastModified: new Date(a.updatedAt),
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+      }));
   } catch (err) {
     console.error("Sitemap article fetch failed:", err);
   }

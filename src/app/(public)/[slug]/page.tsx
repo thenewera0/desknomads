@@ -174,10 +174,7 @@ export async function generateMetadata({
   // Thin stubs stay live (redirect targets still resolve) but are not indexed,
   // so they don't count against the site's overall quality signal.
   const thin = !isIndexable(article);
-  const canonicalUrl =
-    article.canonicalUrl && !article.canonicalUrl.includes("desknomads.shop")
-      ? article.canonicalUrl
-      : `${siteUrl}/${article.slug}`;
+  const canonicalUrl = `${siteUrl}/${article.slug}`;
 
   return {
     title: article.seoTitle || article.title,
@@ -218,15 +215,18 @@ function generateArticleSchema(article: Article) {
   const siteUrl = getSiteUrl();
   return {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "TechArticle",
     headline: article.title,
     description: article.seoDescription || article.excerpt,
-    image: article.featuredImage,
+    image: [article.ogImage || article.featuredImage],
     datePublished: article.publishedAt,
     dateModified: article.updatedAt,
+    inLanguage: "en-US",
+    isAccessibleForFree: true,
     author: {
       "@type": "Person",
-      name: article.author?.name || "DeskNomads",
+      name: article.author?.name || "DeskNomads Editorial Team",
+      jobTitle: "Technology & AI Analyst",
       url: article.author
         ? `${siteUrl}/author/${article.author.slug}`
         : siteUrl,
@@ -234,9 +234,12 @@ function generateArticleSchema(article: Article) {
     publisher: {
       "@type": "Organization",
       name: "DeskNomads",
+      url: siteUrl,
       logo: {
         "@type": "ImageObject",
         url: `${siteUrl}/logo.png`,
+        width: 512,
+        height: 512,
       },
     },
     mainEntityOfPage: {
@@ -246,6 +249,10 @@ function generateArticleSchema(article: Article) {
     wordCount: article.wordCount,
     articleSection: article.category?.name,
     keywords: article.tags.join(", "),
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".article-content h2", ".article-content p:first-of-type"],
+    },
   };
 }
 
@@ -348,10 +355,10 @@ export default async function ArticlePage({
   // Real related articles from the same category (exclude current); none → section hidden.
   let related: RelatedArticle[] = [];
   try {
-    const cards = await getArticleCards({ categorySlug: article.category?.slug, limit: 7 });
+    const cards = await getArticleCards({ categorySlug: article.category?.slug, limit: 12 });
     related = cards
       .filter((a) => a.id !== article.id)
-      .slice(0, 3)
+      .slice(0, 6)
       .map((a) => ({
         id: a.id,
         title: a.title,
