@@ -13,6 +13,7 @@ import dynamic from "next/dynamic";
 import ArticleContent from "@/components/articles/ArticleContent";
 import RelatedArticles, { type RelatedArticle } from "@/components/articles/RelatedArticles";
 import CopyLinkButton from "@/components/articles/CopyLinkButton";
+import AdsterraAd from "@/components/ads/AdsterraAd";
 
 const ReadingProgress = dynamic(() => import("@/components/articles/ReadingProgress"));
 const ViewTracker = dynamic(() => import("@/components/articles/ViewTracker"));
@@ -434,6 +435,11 @@ export default async function ArticlePage({
             </span>
           </nav>
 
+          {/* Header Ad (728x90 Desktop only) */}
+          <div className="hidden md:flex justify-center mb-10 w-full">
+            <AdsterraAd format="728x90" className="!my-0" />
+          </div>
+
           {/* Article Header */}
           <header className="max-w-3xl mb-10">
             {/* Category badge */}
@@ -517,12 +523,13 @@ export default async function ArticlePage({
 
             {/* Main Content */}
             <div className="lg:col-span-6">
-              {/* Adsense: Top of article */}
-              <div className="mb-8 p-4 rounded-xl bg-[var(--dn-bg-card)] border border-white/[0.04] text-center text-[11px] text-[var(--dn-text-muted)]">
-                Advertisement
-              </div>
+              {/* In-Article Top Banner: Below Article Introduction */}
+              <AdsterraAd format="300x250" className="mb-8" />
 
               <ArticleContent html={article.content} />
+
+              {/* In-Article Bottom Banner: Near End of Article */}
+              <AdsterraAd format="300x250" className="my-10" />
 
               {/* FAQ Section */}
               {article.faqs.length > 0 && (
@@ -598,13 +605,11 @@ export default async function ArticlePage({
               <NewsletterInline />
             </div>
 
-            {/* Right Sidebar (ads, related) */}
+            {/* Right Sidebar (sticky ad) */}
             <aside className="lg:col-span-3">
-              {/* Adsense: Sidebar */}
-              <div className="mb-6 p-4 rounded-xl bg-[var(--dn-bg-card)] border border-white/[0.04] text-center text-[11px] text-[var(--dn-text-muted)] sticky top-24">
-                <div className="w-full aspect-[300/250] flex items-center justify-center">
-                  Sidebar Ad — 300x250
-                </div>
+              {/* Sticky Sidebar Ad (300x250) */}
+              <div className="sticky top-24 mb-6">
+                <AdsterraAd format="300x250" className="!my-0" />
               </div>
             </aside>
           </div>

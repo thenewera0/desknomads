@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import AdsterraAd from "@/components/ads/AdsterraAd";
 
 const PUBLISHER = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
 // One reusable responsive ad-unit slot id created in the AdSense dashboard.
-// Until this is set (and the domain is approved), a clean reserved space shows.
+// When set and approved, AdSense is used. Otherwise, highrevenueformat display ads serve automatically.
 const SLOT = process.env.NEXT_PUBLIC_ADSENSE_SLOT;
 
 export default function AdSlot({ id, className = "" }: { id: string; className?: string }) {
@@ -17,9 +18,13 @@ export default function AdSlot({ id, className = "" }: { id: string; className?:
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
     } catch {
-      /* script blocked or not yet loaded (e.g. local dev) */
+      /* script blocked or not yet loaded */
     }
   }, [active]);
+
+  if (!active) {
+    return <AdsterraAd format="responsive" className={className} />;
+  }
 
   return (
     <div className={`w-full max-w-5xl mx-auto px-4 md:px-8 my-8 md:my-12 ${className}`}>
@@ -28,22 +33,16 @@ export default function AdSlot({ id, className = "" }: { id: string; className?:
           Advertisement
         </span>
         <div className="flex items-center justify-center min-h-[100px] md:min-h-[120px]">
-          {active ? (
-            <ins
-              ref={ref}
-              className="adsbygoogle"
-              style={{ display: "block", width: "100%" }}
-              data-ad-client={`ca-${PUBLISHER}`}
-              data-ad-slot={SLOT}
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-              data-dn-placement={id}
-            />
-          ) : (
-            <span className="text-[var(--dn-text-muted)] text-[10px] font-mono tracking-wide opacity-60">
-              Ad space
-            </span>
-          )}
+          <ins
+            ref={ref}
+            className="adsbygoogle"
+            style={{ display: "block", width: "100%" }}
+            data-ad-client={`ca-${PUBLISHER}`}
+            data-ad-slot={SLOT}
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+            data-dn-placement={id}
+          />
         </div>
       </div>
     </div>
