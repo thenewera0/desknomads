@@ -612,13 +612,17 @@ export default async function ArticlePage({
               <NewsletterInline />
             </div>
 
-            {/* Right Sidebar (sticky ad) */}
-            <aside className="lg:col-span-3">
-              {/* Sticky Sidebar Ad (300x250) */}
-              <div className="sticky top-24 mb-6">
-                <AdsterraAd format="300x250" className="!my-0" />
+            {/* Right Sidebar (desktop sticky skyscraper ad) */}
+            <aside className="hidden lg:block lg:col-span-3">
+              <div className="sticky top-24 flex flex-col items-center">
+                <AdsterraAd format="160x600" className="!my-0" label="Sponsor" />
               </div>
             </aside>
+          </div>
+
+          {/* Pre-Related Articles Banner */}
+          <div className="w-full flex justify-center my-12">
+            <AdsterraAd format="responsive" className="!my-0" />
           </div>
 
           {/* Related Articles */}

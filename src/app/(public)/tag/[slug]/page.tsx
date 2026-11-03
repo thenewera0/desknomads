@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AnimatedCategoryHeader, AnimatedArticleGrid } from "@/components/shared/AnimatedGrid";
+import AdsterraAd from "@/components/ads/AdsterraAd";
 import { getArticleCardsByTag } from "@/lib/firebase/server-data";
 
 export const revalidate = 3600;
@@ -71,8 +72,18 @@ export default async function TagPage({
           count={articles.length}
         />
 
+        {/* Top Banner (728x90 desktop / 300x250 mobile) */}
+        <div className="my-8 flex justify-center">
+          <AdsterraAd format="responsive" />
+        </div>
+
         {/* Animated Grid */}
         <AnimatedArticleGrid articles={articles} />
+
+        {/* Bottom Banner */}
+        <div className="mt-12 flex justify-center">
+          <AdsterraAd format="responsive" />
+        </div>
       </div>
     </div>
   );

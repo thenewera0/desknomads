@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export type AdFormat = "728x90" | "300x250" | "responsive";
+export type AdFormat = "728x90" | "300x250" | "160x600" | "responsive";
 
 interface AdsterraAdProps {
   format?: AdFormat;
@@ -22,6 +22,12 @@ const AD_SPECS = {
     width: 300,
     height: 250,
     url: "https://www.highrevenueformat.com/dbcc3a6fb3a4821d9ec0e70c4555b908/invoke.js",
+  },
+  "160x600": {
+    key: "e4c794cad0d4821152137def3ed34cec",
+    width: 160,
+    height: 600,
+    url: "https://bicea.org/22/e4c794cad0d4821152137def3ed34cec",
   },
 };
 
@@ -72,7 +78,9 @@ export default function AdsterraAd({
 
   if (!mounted) {
     // SSR / Hydration placeholder with reserved dimensions to prevent CLS (Cumulative Layout Shift)
-    const minHeight = format === "728x90" ? "90px" : "250px";
+    let minHeight = "250px";
+    if (format === "728x90") minHeight = "90px";
+    else if (format === "160x600") minHeight = "600px";
     return (
       <div
         className={`w-full flex items-center justify-center my-6 opacity-0 pointer-events-none ${className}`}
@@ -137,9 +145,10 @@ export default function AdsterraAd({
     );
   }
 
-  // Fixed format (728x90 or 300x250)
+  // Fixed format (728x90, 300x250, or 160x600)
   const spec = AD_SPECS[format];
-  const maxBoxWidth = format === "728x90" ? 744 : 316;
+  const maxBoxWidth =
+    format === "728x90" ? 744 : format === "160x600" ? 176 : 316;
 
   return (
     <div className={`w-full flex flex-col items-center justify-center my-6 ${className}`}>
@@ -170,4 +179,3 @@ export default function AdsterraAd({
     </div>
   );
 }
-

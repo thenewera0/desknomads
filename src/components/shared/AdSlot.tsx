@@ -1,14 +1,22 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import AdsterraAd from "@/components/ads/AdsterraAd";
+import AdsterraAd, { type AdFormat } from "@/components/ads/AdsterraAd";
 
 const PUBLISHER = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
 // One reusable responsive ad-unit slot id created in the AdSense dashboard.
 // When set and approved, AdSense is used. Otherwise, highrevenueformat display ads serve automatically.
 const SLOT = process.env.NEXT_PUBLIC_ADSENSE_SLOT;
 
-export default function AdSlot({ id, className = "" }: { id: string; className?: string }) {
+export default function AdSlot({
+  id,
+  className = "",
+  format = "responsive",
+}: {
+  id: string;
+  className?: string;
+  format?: AdFormat;
+}) {
   const ref = useRef<HTMLModElement>(null);
   const [active] = useState<boolean>(() => !!SLOT && !!PUBLISHER);
 
@@ -23,7 +31,7 @@ export default function AdSlot({ id, className = "" }: { id: string; className?:
   }, [active]);
 
   if (!active) {
-    return <AdsterraAd format="responsive" className={className} />;
+    return <AdsterraAd format={format} className={className} />;
   }
 
   return (

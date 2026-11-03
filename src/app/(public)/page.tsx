@@ -5,7 +5,7 @@ import Categories from "@/components/home/Categories";
 import TrendingTools from "@/components/home/TrendingTools";
 import NewsletterCTA from "@/components/home/NewsletterCTA";
 import LatestArticles from "@/components/home/LatestArticles";
-import AdSlot from "@/components/shared/AdSlot";
+import AdsterraAd from "@/components/ads/AdsterraAd";
 import { getArticleCards, getApprovedTools } from "@/lib/firebase/server-data";
 
 // Revalidate the homepage hourly so fresh articles appear while maximizing Edge CDN caching.
@@ -75,11 +75,30 @@ export default async function HomePage() {
 
       {/* Page Sections */}
       <Hero />
-      <div className="flex flex-col gap-32 md:gap-48 pb-32">
+      <div className="flex flex-col gap-24 md:gap-36 pb-32">
         <TrendingArticles articles={trending} />
+
+        {/* Post-Trending Banner (728x90 desktop / 300x250 mobile) */}
+        <div className="dn-container flex justify-center -my-6 md:-my-10">
+          <AdsterraAd format="responsive" label="Sponsored" />
+        </div>
+
         <Categories />
+
+        {/* Mid-Page Banner */}
+        <div className="dn-container flex justify-center -my-6 md:-my-10">
+          <AdsterraAd format="responsive" label="Advertisement" />
+        </div>
+
         <TrendingTools tools={tools} />
+
         <NewsletterCTA />
+
+        {/* Pre-Latest Articles Banner */}
+        <div className="dn-container flex justify-center -my-6 md:-my-10">
+          <AdsterraAd format="responsive" label="Featured Sponsor" />
+        </div>
+
         <LatestArticles articles={latest} />
       </div>
     </>

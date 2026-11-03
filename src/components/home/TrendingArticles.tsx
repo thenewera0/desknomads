@@ -196,7 +196,7 @@ export default function TrendingArticles({ articles }: { articles?: Partial<Arti
             <div className="glass-card h-full flex items-center justify-center relative overflow-hidden bg-[var(--dn-bg-section-elevated)] group">
                {/* Decorative glass glow inside Ad container */}
                <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.03),transparent_70%)] pointer-events-none" />
-               <AdSlot id="home-trending-integrated" className="!my-0 !w-full !px-0" />
+               <AdSlot id="home-trending-integrated" format="300x250" className="!my-0 !w-full !px-0" />
             </div>
           </motion.div>
 

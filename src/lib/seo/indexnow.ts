@@ -37,3 +37,4 @@ export async function submitToIndexNow(urls: string[]): Promise<{ ok: boolean; s
     };
   }
 }
+

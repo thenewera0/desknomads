@@ -327,7 +327,7 @@ export default function TrendingTools({ tools }: { tools?: Partial<Tool>[] }) {
              <div className="glass-card h-full flex items-center justify-center relative overflow-hidden bg-[var(--dn-bg-section-elevated)] group">
                <div className="glass-core flex items-center justify-center relative">
                  <div className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.02),transparent_70%)] pointer-events-none" />
-                 <AdSlot id="home-tools-integrated" className="!my-0 !w-full !px-0" />
+                 <AdSlot id="home-tools-integrated" format="300x250" className="!my-0 !w-full !px-0" />
                </div>
              </div>
           </motion.div>

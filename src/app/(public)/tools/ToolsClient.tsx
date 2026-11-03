@@ -15,6 +15,7 @@ import {
   RocketLaunch,
 } from "@phosphor-icons/react";
 import type { Tool } from "@/types";
+import AdsterraAd from "@/components/ads/AdsterraAd";
 
 // Demo data for directory
 const allTools: Partial<Tool>[] = [
@@ -296,6 +297,11 @@ export default function ToolsDirectoryPage() {
           </div>
         </div>
 
+        {/* Top Directory Banner (728x90 desktop / 300x250 mobile) */}
+        <div className="my-8 flex justify-center">
+          <AdsterraAd format="responsive" />
+        </div>
+
         {/* Directory Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
           <AnimatePresence mode="popLayout">
@@ -416,6 +422,11 @@ export default function ToolsDirectoryPage() {
         </div>
 
         {/* Submit a Tool Section */}
+        {/* Bottom Directory Banner */}
+        <div className="mt-12 mb-6 flex justify-center">
+          <AdsterraAd format="responsive" />
+        </div>
+
         {/* Outer Shell Banner */}
         <div className="p-1.5 rounded-[1.75rem] bg-white/[0.02] border border-white/[0.06] mt-8">
           <motion.div
