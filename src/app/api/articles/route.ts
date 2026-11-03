@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPublishedArticlesWithCategory } from "@/lib/firebase/server-data";
 
 export const runtime = "nodejs";
-export const revalidate = 300;
+export const revalidate = 3600;
 
 /** Public list of published articles for homepage/category widgets. */
 export async function GET(req: NextRequest) {

@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
   // in Vercel serverless functions (fixes "Failed to load external module").
   serverExternalPackages: ["firebase-admin", "google-auth-library"],
   images: {
+    minimumCacheTTL: 2678400, // Cache optimized images at edge for 31 days to avoid repeat CPU transformations
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",

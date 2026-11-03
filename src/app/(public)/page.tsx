@@ -8,8 +8,8 @@ import LatestArticles from "@/components/home/LatestArticles";
 import AdSlot from "@/components/shared/AdSlot";
 import { getArticleCards, getApprovedTools } from "@/lib/firebase/server-data";
 
-// Revalidate the homepage so newly published articles appear without a redeploy.
-export const revalidate = 300;
+// Revalidate the homepage hourly so fresh articles appear while maximizing Edge CDN caching.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "DeskNomads — AI Tools, Remote Jobs & Passive Income",

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AnimatedCategoryHeader, AnimatedArticleGrid } from "@/components/shared/AnimatedGrid";
 import { getArticleCardsByTag } from "@/lib/firebase/server-data";
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

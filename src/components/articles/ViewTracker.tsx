@@ -6,6 +6,18 @@ import { useEffect } from "react";
 export default function ViewTracker({ articleId }: { articleId: string }) {
   useEffect(() => {
     if (!articleId) return;
+
+    // Filter out bots, automated crawlers, and headless testing environments
+    if (
+      typeof navigator !== "undefined" &&
+      (navigator.webdriver ||
+        /bot|crawler|spider|googlebot|bingbot|yandex|baidu|slurp|duckduckbot|facebookexternalhit|whatsapp|preview|headless/i.test(
+          navigator.userAgent
+        ))
+    ) {
+      return;
+    }
+
     const key = `dn_viewed_${articleId}`;
     try {
       if (sessionStorage.getItem(key)) return;
@@ -20,7 +32,7 @@ export default function ViewTracker({ articleId }: { articleId: string }) {
         body: JSON.stringify({ articleId }),
         keepalive: true,
       }).catch(() => {});
-    }, 1500); // only count engaged views
+    }, 5000); // Only count genuine reads (5s+) to avoid burning CPU on bounces
     return () => clearTimeout(t);
   }, [articleId]);
 

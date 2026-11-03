@@ -54,7 +54,7 @@ function formatViews(views: number): string {
   return views.toString();
 }
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 export default async function AuthorPage({
   params,

@@ -19,11 +19,20 @@ const ViewTracker = dynamic(() => import("@/components/articles/ViewTracker"));
 const TableOfContents = dynamic(() => import("@/components/articles/TableOfContents"));
 const NewsletterInline = dynamic(() => import("@/components/articles/NewsletterInline"));
 import type { Article, FAQ, TOCItem } from "@/types";
-import { getPublishedArticleBySlug, getArticleCards, isIndexable } from "@/lib/firebase/server-data";
+import { getPublishedArticleBySlug, getArticleCards, isIndexable, getPublishedSlugs } from "@/lib/firebase/server-data";
 import { getSiteUrl } from "@/lib/utils";
 
-// Revalidate article pages periodically so freshly published content appears.
-export const revalidate = 300;
+// Cache articles for 24 hours at the Edge CDN. Crawlers and repeat visits hit cache with 0ms CPU.
+export const revalidate = 86400;
+
+export async function generateStaticParams() {
+  try {
+    const slugs = await getPublishedSlugs();
+    return slugs.filter((a) => a.slug).slice(0, 30).map((a) => ({ slug: a.slug }));
+  } catch {
+    return [];
+  }
+}
 
 // Demo article — replace with Firestore fetch
 const demoArticle: Article = {

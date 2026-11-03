@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AnimatedCategoryHeader, AnimatedArticleGrid } from "@/components/shared/AnimatedGrid";
 import { getPublishedArticlesWithCategory } from "@/lib/firebase/server-data";
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 // Demo categories — replace with Firestore
 const demoCategories: Record<string, { name: string; color: string; description: string; icon: string }> = {
